@@ -1,0 +1,19 @@
+{
+    "name": "deviscoding/mac-update",
+    "type": "project",
+    "authors": [
+        {
+            "name": "AMJones",
+            "email": "am@jonesiscoding.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "DevCoding\\Mac\\Update\\": "src"
+        }
+    },
+    "version": "1.0",
+    "require": {
+        "jonesiscoding/base-console": "^1.0"
+    }
+}
