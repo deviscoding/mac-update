@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+
+set_time_limit(0);
+
+$dir = __DIR__ . '/..';
+require_once $dir.'/vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use DevCoding\Mac\Command as Command;
+
+$command[] = new DevCoding\Mac\Update\Command\UpdateCommand();
+$app = new Application('MacUpdate', 'v1.0');
+$app->addCommands($command);
+$app->setDefaultCommand('check');
+$app->run();

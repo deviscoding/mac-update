@@ -1,0 +1,19 @@
+{
+  "chmod": "0755",
+  "directories": [
+    "src",
+    "src/Command",
+    "src/Objects"
+  ],
+  "finder": [
+    {
+      "name": "*.php",
+      "exclude": ["Tests"],
+      "in": "vendor"
+    }
+  ],
+  "git-version": "package_version",
+  "main": "bin/console",
+  "output": "dist/macupdate.phar",
+  "stub": true
+}
