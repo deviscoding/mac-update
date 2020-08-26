@@ -39,7 +39,9 @@ class UpdateCommand extends AbstractConsole
     switch($this->io()->getArgument('verb'))
     {
       case 'check':
+        $this->io()->msg('Checking For Updates', 50);
         $Updates = $this->getValidUpdates();
+        $this->io()->successln('[SUCCESS]');
         if (empty($Updates))
         {
           $this->io()->errorln('There are no matching updates to install.');
@@ -54,7 +56,7 @@ class UpdateCommand extends AbstractConsole
       case 'list':
         return $this->doList();
       case 'install':
-        return self::EXIT_ERROR;
+        return $this->doInstall();
       case 'download':
         return $this->doDownload();
       default:
@@ -105,7 +107,9 @@ class UpdateCommand extends AbstractConsole
     else
     {
       $errors = false;
+      $this->io()->msg('Checking For Updates', 50);
       $Updates = $this->getValidUpdates();
+      $this->io()->successln('[SUCCESS]');
       foreach($Updates as $macUpdate)
       {
         $this->io()->info('Installing ' . $macUpdate->getName(), 60);
@@ -135,7 +139,9 @@ class UpdateCommand extends AbstractConsole
 
   protected function doDownload()
   {
+    $this->io()->msg('Checking For Updates', 50);
     $Updates = $this->getValidUpdates();
+    $this->io()->successln('[SUCCESS]');
     $errors = false;
 
     foreach($Updates as $macUpdate)
@@ -166,7 +172,10 @@ class UpdateCommand extends AbstractConsole
 
   protected function doList()
   {
+    $this->io()->msg('Checking For Updates', 50);
     $Updates = $this->getValidUpdates();
+    $this->io()->successln('[SUCCESS]');
+    $this->io()->blankln();
 
     if (empty($Updates))
     {
@@ -286,10 +295,10 @@ class UpdateCommand extends AbstractConsole
         if (!empty($output))
         {
           $count = count($output);
-          for($x = 0; $x <= $count; $x++)
+          for($x = 0; $x < $count; $x++)
           {
             unset($Update);
-            if(preg_match('#^\s?\*\s(.*)$#', $output[$x], $matches))
+            if(preg_match('#\*\s(.*)$#', trim($output[$x]), $matches))
             {
               if (!empty($matches[1]))
               {
@@ -371,7 +380,7 @@ class UpdateCommand extends AbstractConsole
     {
       if (!empty($parts[1]))
       {
-        $Update->setName($parts[1]);
+        $Update->setName(trim($parts[1]));
       }
 
       if (!empty($parts[2]))
