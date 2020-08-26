@@ -12,8 +12,9 @@
             "DevCoding\\Mac\\Update\\": "src"
         }
     },
-    "version": "1.0",
+    "version": "1.0.1",
     "require": {
+        "php": "^7.0",
         "jonesiscoding/base-console": "^1.0"
     }
 }
