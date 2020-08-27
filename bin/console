@@ -7,10 +7,11 @@ $dir = __DIR__ . '/..';
 require_once $dir.'/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
-use DevCoding\Mac\Command as Command;
 
-$command[] = new DevCoding\Mac\Update\Command\UpdateCommand();
-$app = new Application('MacUpdate', 'v1.0');
+$command[] = new DevCoding\Mac\Update\Command\CheckCommand();
+$command[] = new DevCoding\Mac\Update\Command\ListCommand();
+$command[] = new DevCoding\Mac\Update\Command\DownloadCommand();
+$command[] = new DevCoding\Mac\Update\Command\InstallCommand();
+$app = new Application('MacUpdate', 'v1.1');
 $app->addCommands($command);
-$app->setDefaultCommand('check');
 $app->run();
