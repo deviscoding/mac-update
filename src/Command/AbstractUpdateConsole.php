@@ -6,14 +6,11 @@ namespace DevCoding\Mac\Update\Command;
 
 use DevCoding\Command\Base\AbstractConsole;
 use DevCoding\Mac\Update\Objects\MacUpdate;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 
 
 
-class UpdateCommand extends AbstractConsole
+class AbstractUpdateConsole extends AbstractConsole
 {
   const PATTERN_DETAILS = '#^(.*), ([0-9]+)K\s?(.*)$#';
 
@@ -26,193 +23,16 @@ class UpdateCommand extends AbstractConsole
 
   protected function configure()
   {
-    $this->setName('check');
-    $this->addArgument('verb', InputArgument::OPTIONAL, 'The action to run', 'list');
-    $this->addOption('recommended', null, InputOption::VALUE_NONE,'Only include recommended updates');
-    $this->addOption('restart', null, InputOption::VALUE_NONE, 'Only include restart updates');
-    $this->addOption('size', null, InputOption::VALUE_REQUIRED, 'Only include updates below the given size.');
-  }
-
-  protected function execute(InputInterface $input, OutputInterface $output)
-  {
-    $this->io()->blankln();
-    switch($this->io()->getArgument('verb'))
-    {
-      case 'check':
-        $this->io()->msg('Checking For Updates', 50);
-        $Updates = $this->getValidUpdates();
-        $this->io()->successln('[SUCCESS]');
-        if (empty($Updates))
-        {
-          $this->io()->errorln('There are no matching updates to install.');
-          return self::EXIT_ERROR;
-        }
-        else
-        {
-          $this->io()->successln(sprintf('There are %s matching updates to install.',count($Updates)));
-
-          return self::EXIT_SUCCESS;
-        }
-      case 'list':
-        return $this->doList();
-      case 'install':
-        return $this->doInstall();
-      case 'download':
-        return $this->doDownload();
-      default:
-        $this->io()->error('Unrecognized Verb.  Exiting.');
-
-        return self::EXIT_ERROR;
-    }
+    $this
+        ->addOption('recommended', null, InputOption::VALUE_NONE,'Only include recommended updates')
+        ->addOption('restart', null, InputOption::VALUE_NONE, 'Only include restart updates')
+        ->addOption('size', null, InputOption::VALUE_REQUIRED, 'Only include updates below the given size.')
+    ;
   }
 
   protected function doInstall()
   {
-    $isRecommended = $this->io()->getOption('recommended') ? true : false;
-    $isRestart     = $this->io()->getOption('restart') ? true : false;
-    $belowSize     = $this->io()->getOption('size') ? $this->io()->getOption('size') : PHP_INT_MAX;
 
-    if ($isRestart && $belowSize)
-    {
-      $this->io()->errorblk("The --restart and --size option cannot be used together with the install verb.");
-    }
-
-    if ($isRestart)
-    {
-      $switches = ['i','a','R'];
-
-      if ($isRecommended)
-      {
-        $switches[] = 'r';
-      }
-
-      $this->io()->msgln('Downloading and installing updates.  The system will restart when appropriate.');
-      exec(sprintf('%s -%s', $this->getSoftwareUpdate(), implode(' ',$switches)), $output, $retval);
-
-      if ($retval != 0)
-      {
-        foreach($output as $line)
-        {
-          if ($line != 'Software Update Tool' && !empty($line))
-          {
-            $this->io()->errorln('  ' . $line);
-          }
-        }
-
-        return self::EXIT_ERROR;
-      }
-
-      return self::EXIT_SUCCESS;
-    }
-    else
-    {
-      $errors = false;
-      $this->io()->msg('Checking For Updates', 50);
-      $Updates = $this->getValidUpdates();
-      $this->io()->successln('[SUCCESS]');
-      foreach($Updates as $macUpdate)
-      {
-        $this->io()->info('Installing ' . $macUpdate->getName(), 60);
-        exec(sprintf('%s -i "%s"', $this->getSoftwareUpdate(), $macUpdate->getId()), $output, $retval);
-
-        if ($retval !== 0)
-        {
-          $errors = true;
-          $this->io()->error('[ERROR]');
-          foreach($output as $line)
-          {
-            if ($line != 'Software Update Tool' && !empty($line))
-            {
-              $this->io()->writeln('  ' . $line);
-            }
-          }
-        }
-        else
-        {
-          $this->io()->successln('[SUCCESS]');
-        }
-      }
-    }
-
-    return ($errors) ? self::EXIT_ERROR : self::EXIT_SUCCESS;
-  }
-
-  protected function doDownload()
-  {
-    $this->io()->msg('Checking For Updates', 50);
-    $Updates = $this->getValidUpdates();
-    $this->io()->successln('[SUCCESS]');
-    $errors = false;
-
-    foreach($Updates as $macUpdate)
-    {
-      $this->io()->info('Downloading ' . $macUpdate->getName(), 60);
-      exec(sprintf('%s -d "%s"', $this->getSoftwareUpdate(), $macUpdate->getId()), $output, $retval);
-
-      if ($retval !== 0)
-      {
-        $errors = true;
-        $this->io()->error('[ERROR]');
-        foreach($output as $line)
-        {
-          if ($line != 'Software Update Tool' && !empty($line))
-          {
-            $this->io()->writeln('  ' . $line);
-          }
-        }
-      }
-      else
-      {
-        $this->io()->successln('[SUCCESS]');
-      }
-    }
-
-    return ($errors) ? self::EXIT_ERROR : self::EXIT_SUCCESS;
-  }
-
-  protected function doList()
-  {
-    $this->io()->msg('Checking For Updates', 50);
-    $Updates = $this->getValidUpdates();
-    $this->io()->successln('[SUCCESS]');
-    $this->io()->blankln();
-
-    if (empty($Updates))
-    {
-      $this->io()->msgln('No Updates are Available.');
-    }
-    else
-    {
-      foreach($Updates as $Update)
-      {
-        if ($this->io()->getOutput()->isQuiet())
-        {
-          $this->io()->writeln($Update->getId(), null, false, OutputInterface::VERBOSITY_QUIET);
-        }
-        else
-        {
-          $this->io()->msg($Update->getName(), 60);
-          $this->io()->write($Update->getSize() . 'K', null, 15);
-
-          $last = [];
-          if ($Update->isRecommended())
-          {
-            $last[] = '[recommended]';
-          }
-
-          if ($Update->isRestart())
-          {
-            $last[] = '[restart]';
-          }
-
-          $this->io()->writeln(implode(' ', $last),null);
-        }
-      }
-    }
-
-    $this->io()->blankln();
-
-    return self::EXIT_ERROR;
   }
 
   /**
