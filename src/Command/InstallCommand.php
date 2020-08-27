@@ -29,7 +29,7 @@ class InstallCommand extends AbstractUpdateConsole
 
     if ($isRestart)
     {
-      $switches = ['i','a','R'];
+      $switches = ['a','R'];
 
       if ($isRecommended)
       {
@@ -37,7 +37,7 @@ class InstallCommand extends AbstractUpdateConsole
       }
 
       $this->io()->msgln('Downloading and installing updates.  The system will restart when appropriate.');
-      exec(sprintf('%s -%s', $this->getSoftwareUpdate(), implode(' ',$switches)), $output, $retval);
+      exec(sprintf('%s --install -%s', $this->getSoftwareUpdate(), implode(' ',$switches)), $output, $retval);
 
       if ($retval != 0)
       {
