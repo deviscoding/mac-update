@@ -12,6 +12,6 @@ $command[] = new DevCoding\Mac\Update\Command\CheckCommand();
 $command[] = new DevCoding\Mac\Update\Command\ListCommand();
 $command[] = new DevCoding\Mac\Update\Command\DownloadCommand();
 $command[] = new DevCoding\Mac\Update\Command\InstallCommand();
-$app = new Application('MacUpdate', 'v1.2');
+$app = new Application('MacUpdate', 'v1.3');
 $app->addCommands($command);
 $app->run();

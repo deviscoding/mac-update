@@ -20,6 +20,7 @@ class InstallCommand extends AbstractUpdateConsole
   {
     $isRecommended = $this->io()->getOption('recommended') ? true : false;
     $isRestart     = $this->io()->getOption('restart') ? true : false;
+    $isShutdown    = $this->io()->getOption('shutdown') ? true : false;
     $belowSize     = $this->io()->getOption('size') ? $this->io()->getOption('size') : PHP_INT_MAX;
 
     if ($isRestart && $belowSize !== PHP_INT_MAX)
@@ -29,7 +30,7 @@ class InstallCommand extends AbstractUpdateConsole
       return self::EXIT_ERROR;
     }
 
-    if ($isRestart)
+    if ($isRestart || $isShutdown)
     {
       $switches = ['a','R'];
 
@@ -64,7 +65,7 @@ class InstallCommand extends AbstractUpdateConsole
       $this->io()->successln('[SUCCESS]');
       foreach($Updates as $macUpdate)
       {
-        $this->io()->info('Installing ' . $macUpdate->getName(), 60);
+        $this->io()->info('Installing ' . $macUpdate->getName(), 50);
         exec(sprintf('%s --no-scan --install "%s"', $this->getSoftwareUpdate(), $macUpdate->getId()), $output, $retval);
 
         if ($retval !== 0)

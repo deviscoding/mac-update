@@ -26,6 +26,7 @@ class AbstractUpdateConsole extends AbstractConsole
     $this
         ->addOption('recommended', null, InputOption::VALUE_NONE,'Only include recommended updates')
         ->addOption('restart', null, InputOption::VALUE_NONE, 'Only include restart updates')
+        ->addOption('shutdown', null, InputOption::VALUE_NONE, 'Only include shutdown updates')
         ->addOption('size', null, InputOption::VALUE_REQUIRED, 'Only include updates below the given size.')
     ;
   }
@@ -44,6 +45,7 @@ class AbstractUpdateConsole extends AbstractConsole
   {
     $isRecommended = $this->io()->getOption('recommended') ? true : false;
     $isRestart     = $this->io()->getOption('restart') ? true : false;
+    $isShutdown    = $this->io()->getOption('shutdown') ? true : false;
     $belowSize     = $this->io()->getOption('size') ? $this->io()->getOption('size') : PHP_INT_MAX;
 
     if ($MacUpdate->getSize() > $belowSize)
@@ -51,35 +53,21 @@ class AbstractUpdateConsole extends AbstractConsole
       return false;
     }
 
-    if($isRecommended)
+    if ($isRecommended && ($MacUpdate->isRecommended() === false))
     {
-      if (!$MacUpdate->isRecommended())
-      {
-        // If we are only showing recommended and this isn't recommended, nope
-        return false;
-      }
-      elseif ($MacUpdate->isRestart() && !$isRestart)
-      {
-        // If this requires a restart and we aren't doing restarts, nope.
-        return false;
-      }
-      elseif ($MacUpdate->isShutdown() && !$isRestart)
-      {
-        // If this requires a shutdown and we aren't doing restarts, nope.
-        return false;
-      }
+      // Only recommended updates requested, this update isn't recommended
+      return false;
     }
 
-    if ($isRestart)
+    if ($MacUpdate->isShutdown() !== $isShutdown)
     {
-      if (!$MacUpdate->isRestart() && !$MacUpdate->isShutdown())
-      {
-        // If we only are showing restarts and this doesn't restart, nope.
-        return false;
-      }
+      // The shutdown property of the update doesn't match the shutdown input option
+      return false;
     }
-    elseif ($MacUpdate->isRestart() || $MacUpdate->isShutdown())
+
+    if ($MacUpdate->isRestart() !== $isRestart)
     {
+      // The restart property of the update doesn't match the restart input option
       return false;
     }
 

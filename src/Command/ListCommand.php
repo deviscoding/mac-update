@@ -51,6 +51,11 @@ class ListCommand extends AbstractUpdateConsole
             $last[] = '[restart]';
           }
 
+          if ($Update->isShutdown())
+          {
+            $last[] = '[shutdown]';
+          }
+
           $this->io()->writeln(implode(' ', $last),null);
         }
       }
