@@ -65,7 +65,7 @@ class InstallCommand extends AbstractUpdateConsole
       foreach($Updates as $macUpdate)
       {
         $this->io()->info('Installing ' . $macUpdate->getName(), 60);
-        exec(sprintf('%s -i "%s"', $this->getSoftwareUpdate(), $macUpdate->getId()), $output, $retval);
+        exec(sprintf('%s --no-scan --install "%s"', $this->getSoftwareUpdate(), $macUpdate->getId()), $output, $retval);
 
         if ($retval !== 0)
         {
