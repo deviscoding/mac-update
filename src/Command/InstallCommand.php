@@ -22,9 +22,11 @@ class InstallCommand extends AbstractUpdateConsole
     $isRestart     = $this->io()->getOption('restart') ? true : false;
     $belowSize     = $this->io()->getOption('size') ? $this->io()->getOption('size') : PHP_INT_MAX;
 
-    if ($isRestart && $belowSize)
+    if ($isRestart && $belowSize !== PHP_INT_MAX)
     {
       $this->io()->errorblk("The --restart and --size option cannot be used together with the install verb.");
+
+      return self::EXIT_ERROR;
     }
 
     if ($isRestart)
