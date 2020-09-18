@@ -63,17 +63,22 @@ class AbstractUpdateConsole extends AbstractConsole
         // If this requires a restart and we aren't doing restarts, nope.
         return false;
       }
+      elseif ($MacUpdate->isShutdown() && !$isRestart)
+      {
+        // If this requires a shutdown and we aren't doing restarts, nope.
+        return false;
+      }
     }
 
     if ($isRestart)
     {
-      if (!$MacUpdate->isRestart())
+      if (!$MacUpdate->isRestart() && !$MacUpdate->isShutdown())
       {
         // If we only are showing restarts and this doesn't restart, nope.
         return false;
       }
     }
-    elseif ($MacUpdate->isRestart())
+    elseif ($MacUpdate->isRestart() || $MacUpdate->isShutdown())
     {
       return false;
     }
@@ -178,6 +183,10 @@ class AbstractUpdateConsole extends AbstractConsole
           {
             $Update->setRestart(true);
           }
+          elseif ($key == 'Action' && $val == 'shut down')
+          {
+            $Update->setShutdown(true);
+          }
         }
       }
 
@@ -218,6 +227,11 @@ class AbstractUpdateConsole extends AbstractConsole
         if (strpos($parts[3], 'restart') !== false)
         {
           $Update->setRestart(true);
+        }
+
+        if (strpos($parts[3], 'halt') !== false || strpos($parts[3], 'shut down') !== false)
+        {
+          $Update->setShutdown(true);
         }
       }
     }

@@ -14,6 +14,8 @@ class MacUpdate
   protected $recommended;
   /** @var bool */
   protected $restart;
+  /** @var bool */
+  protected $shutdown;
 
   /**
    * MacUpdate constructor.
@@ -110,6 +112,11 @@ class MacUpdate
     return $this->restart;
   }
 
+  public function isShutdown()
+  {
+    return $this->shutdown;
+  }
+
   /**
    * @param bool $restart
    *
@@ -122,5 +129,15 @@ class MacUpdate
     return $this;
   }
 
+  /**
+   * @param bool $shutdown
+   *
+   * @return MacUpdate
+   */
+  public function setShutdown($shutdown): MacUpdate
+  {
+    $this->shutdown = $shutdown;
 
+    return $this;
+  }
 }
