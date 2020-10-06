@@ -27,7 +27,6 @@ class AbstractUpdateConsole extends AbstractConsole
         ->addOption('recommended', null, InputOption::VALUE_NONE,'Only include recommended updates')
         ->addOption('restart', null, InputOption::VALUE_NONE, 'Only include restart updates')
         ->addOption('shutdown', null, InputOption::VALUE_NONE, 'Only include shutdown updates')
-        ->addOption('size', null, InputOption::VALUE_REQUIRED, 'Only include updates below the given size.')
     ;
   }
 
@@ -46,12 +45,6 @@ class AbstractUpdateConsole extends AbstractConsole
     $isRecommended = $this->io()->getOption('recommended') ? true : false;
     $isRestart     = $this->io()->getOption('restart') ? true : false;
     $isShutdown    = $this->io()->getOption('shutdown') ? true : false;
-    $belowSize     = $this->io()->getOption('size') ? $this->io()->getOption('size') : PHP_INT_MAX;
-
-    if ($MacUpdate->getSize() > $belowSize)
-    {
-      return false;
-    }
 
     if ($isRecommended && ($MacUpdate->isRecommended() === false))
     {
