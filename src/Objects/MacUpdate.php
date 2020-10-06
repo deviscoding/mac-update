@@ -11,11 +11,11 @@ class MacUpdate
   /** @var string */
   protected $id;
   /** @var bool */
-  protected $recommended;
+  protected $recommended = false;
   /** @var bool */
-  protected $restart;
+  protected $restart = false;
   /** @var bool */
-  protected $shutdown;
+  protected $shutdown = false;
 
   /**
    * MacUpdate constructor.
