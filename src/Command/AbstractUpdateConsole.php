@@ -251,11 +251,35 @@ class AbstractUpdateConsole extends AbstractConsole
     return false;
   }
 
-  protected function isCatalinaUp()
+  /**
+   * @return string
+   * @throws \Exception
+   */
+  protected function getSoftwareUpdate()
   {
-    $version = $this->getMacOsVersion();
+    if (empty($this->_SoftwareUpdateBinary))
+    {
+      $this->_SoftwareUpdateBinary = $this->getBinaryPath('softwareupdate');
+    }
 
-    return $version['minor'] >= 15;
+    return $this->_SoftwareUpdateBinary;
+  }
+
+  // region //////////////////////////////////////////////// System Information Functions
+
+  protected function getConsoleUser()
+  {
+    return $this->getShellExec("/usr/sbin/scutil <<< \"show State:/Users/ConsoleUser\" | /usr/bin/awk '/Name :/ && ! /loginwindow/ { print $3 }'");
+  }
+
+  protected function getConsoleUserId()
+  {
+    return $this->getUserId($this->getConsoleUser());
+  }
+
+  protected function getUserId($user)
+  {
+    return $this->getShellExec(sprintf("/usr/bin/id -u %s", $user));
   }
 
   protected function getMacOsVersion()
@@ -277,19 +301,54 @@ class AbstractUpdateConsole extends AbstractConsole
     return $this->_DarwinVersion;
   }
 
-  /**
-   * @return string
-   * @throws \Exception
-   */
-  protected function getSoftwareUpdate()
+  protected function isBatteryPowered()
   {
-    if (empty($this->_SoftwareUpdateBinary))
-    {
-      $this->_SoftwareUpdateBinary = $this->getBinaryPath('softwareupdate');
-    }
+    $battery = $this->getShellExec('/usr/bin/pmset -g ps');
 
-    return $this->_SoftwareUpdateBinary;
+    return (strpos($battery, 'Battery Power') !== false);
   }
 
+  protected function isCatalinaUp()
+  {
+    $version = $this->getMacOsVersion();
 
+    return $version['minor'] >= 15;
+  }
+
+  /**
+   * @return string|null
+   */
+  protected function isDisplaySleepPrevented()
+  {
+    $a = $this->getShellExec("/usr/bin/pmset -g assertions | /usr/bin/awk '/NoDisplaySleepAssertion | PreventUserIdleDisplaySleep/ && match($0,/\(.+\)/) && ! /coreaudiod/ {gsub(/^\ +/,\"\",$0); print};'");
+
+    return !empty($a);
+  }
+
+  protected function isEncryptingFileVault()
+  {
+    $fv = $this->getShellExec('/usr/bin/fdesetup status');
+
+    return (strpos($fv, 'Encryption in progress') !== false);
+  }
+
+  protected function isSecurityChip()
+  {
+    $bridge = $this->getShellExec("/usr/sbin/system_profiler SPiBridgeDataType | /usr/bin/awk -F: '/Model Name/ { gsub(/.*: /,\"\"); print $0}'");
+
+    return !empty($bridge);
+  }
+
+  protected function isSecureBoot()
+  {
+    $P = Process::fromShellCommandline("nvram 94b73556-2197-4702-82a8-3e1337dafbfb:AppleSecureBootPolicy | awk '{ print $2 }'");
+    $P->run();
+
+    if ($P->isSuccessful())
+    {
+      return (strpos($P->getOutput(), "%02") !== false);
+    }
+
+    return false;
+  }
 }

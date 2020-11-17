@@ -6,6 +6,7 @@ namespace DevCoding\Mac\Update\Command;
 
 use DevCoding\Mac\Update\Objects\MacUpdate;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
@@ -14,18 +15,65 @@ class InstallCommand extends AbstractUpdateConsole
   protected function configure()
   {
     $this->setName('install');
-
+    $this->addOption('force', null, InputOption::VALUE_NONE, "Force updates to install regardless of status of battery or user." );
     parent::configure();
+  }
+
+  protected function isForced()
+  {
+    return $this->io()->getOption('force') ? true : false;
   }
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
     $errors     = [];
+    $cUser      = $this->getConsoleUser();
     $Updates    = $this->getValidUpdates();
     $isRestart  = $this->isRestartRequired($Updates);
     $isShutdown = $this->isShutdownRequired($Updates);
     $this->io()->blankln();
 
+    // Battery Power
+    $this->io()->msg('Checking for AC Power', 40);
+    if ($this->isBatteryPowered() && !$this->isForced())
+    {
+      $this->io()->errorln('[ERROR]');
+      $errors[] = "The system is running on battery power.";
+    }
+
+    // User Login Status if Shutdown or Restart is Required
+    if ($isShutdown || $isRestart)
+    {
+      $this->io()->msg('Checking User Login', 40);
+      if (!empty($cUser) && !$this->isForced())
+      {
+        $this->io()->errorln('[ERROR]');
+        $errors[] = "A user is logged in, and a shutdown or restart is required.";
+      }
+    }
+
+    // File Vault Status
+    $this->io()->msg('Checking File Vault', 40);
+    if ($this->isEncryptingFileVault())
+    {
+      $this->io()->errorln('[ERROR]');
+      $errors[] = 'Updates cannot be installed while File Vault is encrypting.';
+    }
+
+    // EXIT IF ERRORS
+    if (!empty($errors))
+    {
+      foreach($errors as $error)
+      {
+        $this->io()->errorln($error);
+      }
+
+      $this->io()->blankln();
+
+      return self::EXIT_ERROR;
+    }
+
+    // Install Updates
     if ($isRestart || $isShutdown)
     {
       // Install all the updates at once
