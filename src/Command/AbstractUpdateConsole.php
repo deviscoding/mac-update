@@ -7,7 +7,7 @@ namespace DevCoding\Mac\Update\Command;
 use DevCoding\Command\Base\AbstractConsole;
 use DevCoding\Mac\Update\Objects\MacUpdate;
 use Symfony\Component\Console\Input\InputOption;
-
+use Symfony\Component\Process\Process;
 
 
 class AbstractUpdateConsole extends AbstractConsole
@@ -27,6 +27,7 @@ class AbstractUpdateConsole extends AbstractConsole
         ->addOption('recommended', null, InputOption::VALUE_NONE,'Only include recommended updates')
         ->addOption('restart', null, InputOption::VALUE_NONE, 'Only include restart updates')
         ->addOption('shutdown', null, InputOption::VALUE_NONE, 'Only include shutdown updates')
+        ->addOption('no-scan', null, InputOption::VALUE_NONE, 'Do not scan for new updates')
     ;
   }
 
@@ -96,8 +97,28 @@ class AbstractUpdateConsole extends AbstractConsole
     {
       if ($suBin = $this->getSoftwareUpdate())
       {
-        exec(sprintf('%s -l', $suBin), $output, $retval);
+        // Create Process
+        $noScan = $this->isNoScan() ? "--no-scan" : null;
+        $Process = Process::fromShellCommandline(trim(sprintf('%s -l %s', $suBin, $noScan)));
+        // Eliminate Timeouts
+        $Process->setIdleTimeout(null)->setTimeout(null);
+        // Run the Process
+        $Process->run();
 
+        // Check for Success
+        if (!$Process->isSuccessful()) {
+          throw new ProcessFailedException($Process);
+        }
+        else
+        {
+          $outLines = $Process->getOutput();
+          if (empty($output))
+          {
+            $outLines = $Process->getErrorOutput();
+          }
+        }
+
+        $output = explode("\n", $outLines);
         if (!empty($output))
         {
           $count = count($output);
@@ -218,6 +239,16 @@ class AbstractUpdateConsole extends AbstractConsole
     }
 
     return $Update;
+  }
+
+  protected function isNoScan()
+  {
+    if ($this->io()->getInput()->hasOption('no-scan'))
+    {
+      return $this->io()->getOption('no-scan') ? true : false;
+    }
+
+    return false;
   }
 
   protected function isCatalinaUp()
