@@ -157,6 +157,26 @@ class InstallCommand extends AbstractUpdateConsole
 
       return false;
     }
+    else
+    {
+      $disk = 'Not enough free disk space';
+      $out = $P->getOutput();
+      $err = $P->getErrorOutput();
+      if (strpos($out, $disk) !== false || strpos($err,$disk) !== false)
+      {
+        $lines = explode("\n", $out ."\n". $err);
+        foreach($lines as $line)
+        {
+          if (strpos($line, $disk) !== false)
+          {
+            $errors[] = $line;
+            $errors[] = sprintf('Only %sGB Free Space Available.', $this->getFreeDiskSpace());
+
+            return false;
+          }
+        }
+      }
+    }
 
     return true;
   }
@@ -203,5 +223,13 @@ class InstallCommand extends AbstractUpdateConsole
     }
 
     return false;
+  }
+
+  /**
+   * @return string|null
+   */
+  protected function getFreeDiskSpace()
+  {
+    return $this->getShellExec("/bin/df -g / | /usr/bin/awk '(NR == 2){print $4}'");
   }
 }
