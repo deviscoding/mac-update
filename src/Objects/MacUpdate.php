@@ -2,7 +2,7 @@
 
 namespace DevCoding\Mac\Update\Objects;
 
-class MacUpdate
+class MacUpdate implements \JsonSerializable
 {
   /** @var string */
   protected $name;
@@ -17,9 +17,19 @@ class MacUpdate
   /** @var bool */
   protected $shutdown = false;
 
+  public function jsonSerialize()
+  {
+    return [
+        'id'          => $this->getId(),
+        'name'        => $this->getName(),
+        'size'        => $this->getSize(),
+        'recommended' => $this->isRecommended(),
+        'restart'     => $this->isRestart(),
+        'shutdown'    => $this->isShutdown()
+    ];
+  }
+
   /**
-   * MacUpdate constructor.
-   *
    * @param string $id
    */
   public function __construct($id) { $this->id = $id; }
