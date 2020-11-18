@@ -1,7 +1,5 @@
-
-  
 # MacUpdate    
- MacUpdate is a command line tool written to ease the management of software updates on macOS, and is primarily intended for people administering multiple macOS systems through Jamf, Puppet, or other scripting.    
+MacUpdate is a command line tool written to ease the management of software updates on macOS, and is primarily intended for people administering multiple macOS systems through Jamf, Puppet, or other scripting.    
     
 Updates that require either a restart or shutdown can be easily segregated, most commands can provide JSON output for easy use in scripts, and additional conditions are used or reported to help determine if updates will or can be installed.    
     
