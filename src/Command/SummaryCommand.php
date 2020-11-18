@@ -109,7 +109,7 @@ class SummaryCommand extends AbstractUpdateConsole
 
     foreach($Updates as $Update)
     {
-      if ($Update->isRecommended())
+      if ($Update->isRecommended() && !$Update->isRestart() && !$Update->isShutdown())
       {
         $output['recommended']++;
       }
