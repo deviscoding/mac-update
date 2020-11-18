@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "067cde42189dd63e9c748464029aba08",
+    "content-hash": "85d71d6ddf7beea9196885e6062e13b2",
     "packages": [
         {
             "name": "jonesiscoding/base-console",

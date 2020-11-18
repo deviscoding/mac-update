@@ -112,7 +112,7 @@ class AbstractUpdateConsole extends AbstractConsole
         else
         {
           $outLines = $Process->getOutput();
-          if (empty($output))
+          if (empty($outLines))
           {
             $outLines = $Process->getErrorOutput();
           }
