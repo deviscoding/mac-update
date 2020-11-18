@@ -13,6 +13,6 @@ $command[] = new DevCoding\Mac\Update\Command\ListCommand();
 $command[] = new DevCoding\Mac\Update\Command\DownloadCommand();
 $command[] = new DevCoding\Mac\Update\Command\InstallCommand();
 $command[] = new DevCoding\Mac\Update\Command\SummaryCommand();
-$app = new Application('MacUpdate', 'v1.5.1');
+$app = new Application('MacUpdate', 'v1.5.2');
 $app->addCommands($command);
 $app->run();

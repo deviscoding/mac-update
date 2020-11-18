@@ -28,7 +28,7 @@ class SummaryCommand extends AbstractUpdateConsole
 
     $this->io()->blankln();
     $this->io()->msg('Checking For Updates', 50);
-    $Updates = $this->getValidUpdates();
+    $Updates = $this->getUpdateList();
     $summary = $this->getSummary($Updates);
     $this->io()->successln('[SUCCESS]');
 
