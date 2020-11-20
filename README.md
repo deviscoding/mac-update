@@ -64,10 +64,14 @@ If all conditions are clear, the exit code is 0.  If one or more conditions did 
 |Flags  | Purpose |    
 |--|--|    
 | json | Output results in JSON format. |    
-| no-scan | Do not scan for new updates, used cached results. |    
-| recommend | Only include recommended updates. |    
-| restart | Only include updates requiring a restart. |    
-| shutdown | Only include updates requiring a shutdown. |    
+| quiet | Suppresses output, only returns exit code. |
+| verbose | Shows countdown while waiting.  Not applicable with JSON output. |    
+| all | Waits for all the conditions below. |    
+| cpu | Waits for the CPU load to be less than 1/2 the number of physical cores. |    
+| filevault | Waits for FileVault encryption to complete. |    
+| power | Waits for the system to be on AC power. |    
+| screen | Waits for any screen sleep assertations to be cleared. |    
+| user | Waits for any user logged in to the MacOS gui to log out. |    
     
 ### Download Command    
  Using the `download` command will cache updates for later installation using the `softwareupdate` command, similar to `softwareupdate --download` This is useful if systems cannot always access the software update server.    
