@@ -3,7 +3,7 @@
 
 set_time_limit(0);
 
-$dir = __DIR__ . '/..';
+$dir = __DIR__.'/..';
 require_once $dir.'/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
@@ -13,6 +13,7 @@ $command[] = new DevCoding\Mac\Update\Command\ListCommand();
 $command[] = new DevCoding\Mac\Update\Command\DownloadCommand();
 $command[] = new DevCoding\Mac\Update\Command\InstallCommand();
 $command[] = new DevCoding\Mac\Update\Command\SummaryCommand();
-$app = new Application('MacUpdate', 'v1.5.4');
+$command[] = new DevCoding\Mac\Update\Command\WaitCommand();
+$app       = new Application('MacUpdate', 'v1.6');
 $app->addCommands($command);
 $app->run();
