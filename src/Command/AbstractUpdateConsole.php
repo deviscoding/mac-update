@@ -20,6 +20,10 @@ class AbstractUpdateConsole extends AbstractConsole
   protected $_Updates = [];
   /** @var array */
   protected $_DarwinVersion = [];
+  /** @var int */
+  protected $_Cores;
+
+  // region //////////////////////////////////////////////// Symfony Command Methods
 
   protected function configure()
   {
@@ -31,11 +35,9 @@ class AbstractUpdateConsole extends AbstractConsole
     ;
   }
 
-  protected function doInstall()
-  {
+  // endregion ///////////////////////////////////////////// End Symfony Copmmand Methods
 
-  }
-
+  // region //////////////////////////////////////////////// Software Update Methods
   /**
    * @param MacUpdate $MacUpdate
    *
@@ -265,6 +267,8 @@ class AbstractUpdateConsole extends AbstractConsole
     return $this->_SoftwareUpdateBinary;
   }
 
+  // endregion ///////////////////////////////////////////// End Software Update Methods
+
   // region //////////////////////////////////////////////// System Information Functions
 
   protected function getConsoleUser()
@@ -301,6 +305,16 @@ class AbstractUpdateConsole extends AbstractConsole
     return $this->_DarwinVersion;
   }
 
+  protected function getCpuCores()
+  {
+    if (empty($this->_Cores))
+    {
+      $this->_Cores = (int)shell_exec("sysctl -n hw.physicalcpu");
+    }
+
+    return $this->_Cores;
+  }
+
   protected function isBatteryPowered()
   {
     $battery = $this->getShellExec('/usr/bin/pmset -g ps');
@@ -330,6 +344,19 @@ class AbstractUpdateConsole extends AbstractConsole
     $fv = $this->getShellExec('/usr/bin/fdesetup status');
 
     return (strpos($fv, 'Encryption in progress') !== false);
+  }
+
+  protected function isLoadHigh()
+  {
+    if (function_exists('sys_getloadavg'))
+    {
+      $cores = $this->getCpuCores() / 2;
+      $load  = sys_getloadavg();
+
+      return isset($load[0]) && (float)$load[0] > $cores;
+    }
+
+    return false;
   }
 
   protected function isSecurityChip()
