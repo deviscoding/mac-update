@@ -1,8 +1,6 @@
 <?php
 
-
 namespace DevCoding\Mac\Update\Command;
-
 
 use DevCoding\Mac\Update\Objects\MacUpdate;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,7 +13,7 @@ class InstallCommand extends AbstractUpdateConsole
   protected function configure()
   {
     $this->setName('install');
-    $this->addOption('force', null, InputOption::VALUE_NONE, "Force updates to install regardless of status of battery or user." );
+    $this->addOption('force', null, InputOption::VALUE_NONE, 'Force updates to install regardless of status of battery or user.');
     parent::configure();
   }
 
@@ -38,7 +36,7 @@ class InstallCommand extends AbstractUpdateConsole
     if ($this->isBatteryPowered() && !$this->isForced())
     {
       $this->io()->errorln('[ERROR]');
-      $errors[] = "The system is running on battery power.";
+      $errors[] = 'The system is running on battery power.';
     }
 
     // User Login Status if Shutdown or Restart is Required
@@ -48,7 +46,7 @@ class InstallCommand extends AbstractUpdateConsole
       if (!empty($cUser) && !$this->isForced())
       {
         $this->io()->errorln('[ERROR]');
-        $errors[] = "A user is logged in, and a shutdown or restart is required.";
+        $errors[] = 'A user is logged in, and a shutdown or restart is required.';
       }
     }
 
@@ -63,7 +61,7 @@ class InstallCommand extends AbstractUpdateConsole
     // EXIT IF ERRORS
     if (!empty($errors))
     {
-      foreach($errors as $error)
+      foreach ($errors as $error)
       {
         $this->io()->errorln($error);
       }
@@ -78,7 +76,7 @@ class InstallCommand extends AbstractUpdateConsole
     {
       // Install all the updates at once
       $noscan   = $this->isNoScan() ? ' --no-scan' : null;
-      $switches = $this->isRecommended() ? ['a','r','R'] : ['a','R'];
+      $switches = $this->isRecommended() ? ['a', 'r', 'R'] : ['a', 'R'];
 
       $this->io()->msgln('Downloading and installing updates.  The system will restart when appropriate.');
       $cmd = sprintf('%s --install -%s%s', $this->getSoftwareUpdate(), implode(' ', $switches), $noscan);
@@ -86,7 +84,7 @@ class InstallCommand extends AbstractUpdateConsole
       if (!$this->runSoftwareUpdate($cmd, $errors))
       {
         $this->io()->blankln();
-        foreach($errors as $error)
+        foreach ($errors as $error)
         {
           $this->io()->errorln($error);
         }
@@ -98,7 +96,7 @@ class InstallCommand extends AbstractUpdateConsole
       {
         // If we got here, the system probably didn't shut down or restart as needed
         $tpl = 'The system installed an update that requires a {t}, but did not {t}.  Please {t}';
-        $msg = str_replace('{t}', $isShutdown ? "SHUTDOWN" : "RESTART", $tpl);
+        $msg = str_replace('{t}', $isShutdown ? 'SHUTDOWN' : 'RESTART', $tpl);
         $this->io()->errorln($msg);
         $this->io()->blankln();
 
@@ -108,18 +106,18 @@ class InstallCommand extends AbstractUpdateConsole
     else
     {
       // Install updates one at a time
-      foreach($Updates as $macUpdate)
+      foreach ($Updates as $macUpdate)
       {
-        $this->io()->info('Installing ' . $macUpdate->getName(), 50);
+        $this->io()->info('Installing '.$macUpdate->getName(), 50);
         $cmd = sprintf('%s --no-scan --install "%s"', $this->getSoftwareUpdate(), $macUpdate->getId());
 
         if (!$this->runSoftwareUpdate($cmd, $err))
         {
           $errors[] = array_merge($errors, $err);
           $this->io()->errorln('[ERROR]');
-          foreach($err as $e)
+          foreach ($err as $e)
           {
-            $this->io()->writeln('  ' . $e);
+            $this->io()->writeln('  '.$e);
           }
         }
         else
@@ -133,10 +131,10 @@ class InstallCommand extends AbstractUpdateConsole
   }
 
   /**
-   * @param string $cmd      The software update command to run
-   * @param array  $errors   Set by reference; any errors generated
+   * @param string $cmd    The software update command to run
+   * @param array  $errors Set by reference; any errors generated
    *
-   * @return bool            TRUE if successful; FALSE if not
+   * @return bool TRUE if successful; FALSE if not
    */
   protected function runSoftwareUpdate($cmd, &$errors = [])
   {
@@ -147,9 +145,9 @@ class InstallCommand extends AbstractUpdateConsole
     {
       $output = !empty($P->getErrorOutput()) ? $P->getErrorOutput() : $P->getOutput();
       $oLines = explode("\n", $output);
-      foreach($oLines as $line)
+      foreach ($oLines as $line)
       {
-        if ($line != 'Software Update Tool' && !empty($line))
+        if ('Software Update Tool' != $line && !empty($line))
         {
           $errors[] = $line;
         }
@@ -160,14 +158,14 @@ class InstallCommand extends AbstractUpdateConsole
     else
     {
       $disk = 'Not enough free disk space';
-      $out = $P->getOutput();
-      $err = $P->getErrorOutput();
-      if (strpos($out, $disk) !== false || strpos($err,$disk) !== false)
+      $out  = $P->getOutput();
+      $err  = $P->getErrorOutput();
+      if (false !== strpos($out, $disk) || false !== strpos($err, $disk))
       {
-        $lines = explode("\n", $out ."\n". $err);
-        foreach($lines as $line)
+        $lines = explode("\n", $out."\n".$err);
+        foreach ($lines as $line)
         {
-          if (strpos($line, $disk) !== false)
+          if (false !== strpos($line, $disk))
           {
             $errors[] = $line;
             $errors[] = sprintf('Only %sGB Free Space Available.', $this->getFreeDiskSpace());
@@ -196,7 +194,7 @@ class InstallCommand extends AbstractUpdateConsole
    */
   protected function isRestartRequired($Updates)
   {
-    foreach($Updates as $Update)
+    foreach ($Updates as $Update)
     {
       if ($Update->isRestart())
       {
@@ -214,7 +212,7 @@ class InstallCommand extends AbstractUpdateConsole
    */
   protected function isShutdownRequired($Updates)
   {
-    foreach($Updates as $Update)
+    foreach ($Updates as $Update)
     {
       if ($Update->isShutdown())
       {

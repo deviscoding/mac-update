@@ -25,14 +25,17 @@ class MacUpdate implements \JsonSerializable
         'size'        => $this->getSize(),
         'recommended' => $this->isRecommended(),
         'restart'     => $this->isRestart(),
-        'shutdown'    => $this->isShutdown()
+        'shutdown'    => $this->isShutdown(),
     ];
   }
 
   /**
    * @param string $id
    */
-  public function __construct($id) { $this->id = $id; }
+  public function __construct($id)
+  {
+    $this->id = $id;
+  }
 
   /**
    * @return string
@@ -69,7 +72,7 @@ class MacUpdate implements \JsonSerializable
    */
   public function setSize($size)
   {
-    $this->size = (int)str_replace('K','', $size);
+    $this->size = (int) str_replace('K', '', $size);
 
     return $this;
   }
@@ -141,8 +144,6 @@ class MacUpdate implements \JsonSerializable
 
   /**
    * @param bool $shutdown
-   *
-   * @return MacUpdate
    */
   public function setShutdown($shutdown): MacUpdate
   {

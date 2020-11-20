@@ -1,8 +1,6 @@
 <?php
 
-
 namespace DevCoding\Mac\Update\Command;
-
 
 use DevCoding\Mac\Update\Objects\MacUpdate;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,7 +32,7 @@ class SummaryCommand extends AbstractUpdateConsole
 
     if ($isJson)
     {
-      $this->io()->writeln(json_encode($summary, JSON_UNESCAPED_SLASHES + JSON_PRETTY_PRINT),null,false,OutputInterface::VERBOSITY_QUIET);
+      $this->io()->writeln(json_encode($summary, JSON_UNESCAPED_SLASHES + JSON_PRETTY_PRINT), null, false, OutputInterface::VERBOSITY_QUIET);
     }
     else
     {
@@ -45,8 +43,8 @@ class SummaryCommand extends AbstractUpdateConsole
       $this->io()->info('Updates Requiring Shutdown', 50)->msgln($summary['shutdown']);
       $this->io()->blankln();
       $this->io()->info('Console Username', 50)->msgln($summary['console_user']);
-      $this->io()->info('Has T2 Security Chip', 50)->msgln($summary['security_chip'] ? "Yes" : "No");
-      $this->io()->info('Has Secure Boot', 50)->msgln($summary['secure_boot'] ? "Yes" : "No");
+      $this->io()->info('Has T2 Security Chip', 50)->msgln($summary['security_chip'] ? 'Yes' : 'No');
+      $this->io()->info('Has Secure Boot', 50)->msgln($summary['secure_boot'] ? 'Yes' : 'No');
       $this->io()->blankln();
 
       // Battery Power
@@ -104,24 +102,24 @@ class SummaryCommand extends AbstractUpdateConsole
         'security_chip'  => $this->isSecurityChip(),
         'secure_boot'    => $this->isSecureBoot(),
         'console_user'   => $this->getConsoleUser(),
-        'console_userid' => $this->getConsoleUserId()
+        'console_userid' => $this->getConsoleUserId(),
     ];
 
-    foreach($Updates as $Update)
+    foreach ($Updates as $Update)
     {
       if ($Update->isRecommended() && !$Update->isRestart() && !$Update->isShutdown())
       {
-        $output['recommended']++;
+        ++$output['recommended'];
       }
 
       if ($Update->isRestart())
       {
-        $output['restart']++;
+        ++$output['restart'];
       }
 
       if ($Update->isShutdown())
       {
-        $output['shutdown']++;
+        ++$output['shutdown'];
       }
     }
 

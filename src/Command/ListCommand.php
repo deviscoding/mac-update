@@ -1,8 +1,6 @@
 <?php
 
-
 namespace DevCoding\Mac\Update\Command;
-
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -33,9 +31,9 @@ class ListCommand extends AbstractUpdateConsole
 
     if ($isJson)
     {
-      $this->io()->writeln(json_encode($Updates, JSON_UNESCAPED_SLASHES + JSON_PRETTY_PRINT),null,false,OutputInterface::VERBOSITY_QUIET);
+      $this->io()->writeln(json_encode($Updates, JSON_UNESCAPED_SLASHES + JSON_PRETTY_PRINT), null, false, OutputInterface::VERBOSITY_QUIET);
     }
-    elseif(empty($Updates))
+    elseif (empty($Updates))
     {
       $this->io()->msgln('No Updates are Available.');
     }
@@ -57,7 +55,7 @@ class ListCommand extends AbstractUpdateConsole
     }
     else
     {
-      foreach($Updates as $Update)
+      foreach ($Updates as $Update)
       {
         if ($this->io()->getOutput()->isQuiet())
         {
@@ -66,7 +64,7 @@ class ListCommand extends AbstractUpdateConsole
         else
         {
           $this->io()->msg($Update->getName(), 60);
-          $this->io()->write($Update->getSize() . 'K', null, 15);
+          $this->io()->write($Update->getSize().'K', null, 15);
 
           $last = [];
           if ($Update->isRecommended())
@@ -84,7 +82,7 @@ class ListCommand extends AbstractUpdateConsole
             $last[] = '[shutdown]';
           }
 
-          $this->io()->writeln(implode(' ', $last),null);
+          $this->io()->writeln(implode(' ', $last), null);
         }
       }
     }

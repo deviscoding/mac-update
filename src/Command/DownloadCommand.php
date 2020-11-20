@@ -1,8 +1,6 @@
 <?php
 
-
 namespace DevCoding\Mac\Update\Command;
-
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,20 +21,20 @@ class DownloadCommand extends AbstractUpdateConsole
     $this->io()->successln('[SUCCESS]');
     $errors = false;
 
-    foreach($Updates as $macUpdate)
+    foreach ($Updates as $macUpdate)
     {
-      $this->io()->info('Downloading ' . $macUpdate->getName(), 50);
+      $this->io()->info('Downloading '.$macUpdate->getName(), 50);
       exec(sprintf('%s --no-scan --download "%s"', $this->getSoftwareUpdate(), $macUpdate->getId()), $output, $retval);
 
-      if ($retval !== 0)
+      if (0 !== $retval)
       {
         $errors = true;
         $this->io()->error('[ERROR]');
-        foreach($output as $line)
+        foreach ($output as $line)
         {
-          if ($line != 'Software Update Tool' && !empty($line))
+          if ('Software Update Tool' != $line && !empty($line))
           {
-            $this->io()->writeln('  ' . $line);
+            $this->io()->writeln('  '.$line);
           }
         }
       }
