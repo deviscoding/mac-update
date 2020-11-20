@@ -28,8 +28,9 @@ Unlike `softwareupdate`, the `--restart` flag is not an indicator of whether the
 These flags can be combined if desired, in which case results will be limited to updates that have **any** of the flags used.    
     
 ## Command Details    
- ### Summary Command    
- The most useful command is `summary`, which will output a count of total, recommended, restart required, and shutdown required updates, as well as the following additional information that is useful when determining if updates can and should be run.    
+
+### Summary Command    
+The most useful command is `summary`, which will output a count of total, recommended, restart required, and shutdown required updates, as well as the following additional information that is useful when determining if updates can and should be run.    
     
  - Console Username    
  - Is T2 Security Chip Present?    
@@ -41,7 +42,32 @@ These flags can be combined if desired, in which case results will be limited to
 |Flags  | Purpose |    
 |--|--|    
 | json | Output results in JSON format. |    
+| no-scan | Do not scan for new updates, used cached results. |  
+
+### Wait Command
+This command is only useful when used in other scripting.  It will wait for the given number of seconds, or when conditions are met, based on the flags given at runtime.  The command can wait for the following conditions to clear:
+
+- User Logged In
+- Screen Sleep Prevented (usually indicating presentation or video)
+- System is on Battery Power
+- FileVault Encryption In Progress
+- CPU Load is High
+
+Only the conditions given as flags will be waited for.  Each condition is checked once per second during the countdown.  Once all the conditions given are cleared, or the timer has counted down, the command shows a report and exits.  An example of usage:
+
+    macupdate wait 30 --user --power
+
+This will wait up to 30 seconds for the system to be on AC power, and for no user to be logged in. 
+
+If all conditions are clear, the exit code is 0.  If one or more conditions did not clear, the exit code is 1.  The report can be suppressed with the `--quiet` flag, or changed to JSON with the `--json` flag.
+
+|Flags  | Purpose |    
+|--|--|    
+| json | Output results in JSON format. |    
 | no-scan | Do not scan for new updates, used cached results. |    
+| recommend | Only include recommended updates. |    
+| restart | Only include updates requiring a restart. |    
+| shutdown | Only include updates requiring a shutdown. |    
     
 ### Download Command    
  Using the `download` command will cache updates for later installation using the `softwareupdate` command, similar to `softwareupdate --download` This is useful if systems cannot always access the software update server.    
