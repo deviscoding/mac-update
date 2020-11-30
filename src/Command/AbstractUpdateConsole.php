@@ -413,7 +413,7 @@ class AbstractUpdateConsole extends AbstractConsole
 
   /**
    * Returns an opinionated determination of whether the CPU load is 'high' based on the current load and the number of
-   * CPU cores. Loads greater than half the number of CPU cores are considered high.  This intentinoally conservative.
+   * CPU cores. Loads greater than the number of CPU cores are considered high.
    *
    * @return bool
    */
@@ -421,7 +421,7 @@ class AbstractUpdateConsole extends AbstractConsole
   {
     if (function_exists('sys_getloadavg'))
     {
-      $cores = $this->getCpuCores() / 2;
+      $cores = $this->getCpuCores();
       $load  = sys_getloadavg();
 
       return isset($load[0]) && (float) $load[0] > $cores;
