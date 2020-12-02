@@ -12,11 +12,12 @@
             "DevCoding\\Mac\\Update\\": "src"
         }
     },
-    "version": "1.6.1",
+    "version": "1.6.2",
     "require": {
         "php": "^7.0",
         "ext-json": "*",
         "jonesiscoding/base-console": "^1.0",
-        "symfony/process": "^4.4"
+        "symfony/process": "^4.4",
+        "deviscoding/mac-console": "^1.2.1"
     }
 }

@@ -2,7 +2,7 @@
 
 namespace DevCoding\Mac\Update\Command;
 
-use DevCoding\Command\Base\AbstractConsole;
+use DevCoding\Mac\Command\AbstractMacConsole;
 use DevCoding\Mac\Update\Objects\MacUpdate;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\Process;
@@ -14,7 +14,7 @@ use Symfony\Component\Process\Process;
  *
  * @package DevCoding\Mac\Update\Command
  */
-class AbstractUpdateConsole extends AbstractConsole
+class AbstractUpdateConsole extends AbstractMacConsole
 {
   const PATTERN_DETAILS = '#^(.*), ([0-9]+)K\s?(.*)$#';
 
@@ -22,10 +22,6 @@ class AbstractUpdateConsole extends AbstractConsole
   protected $_SoftwareUpdateBinary;
   /** @var MacUpdate[] An array of MacUpdate objects */
   protected $_Updates = [];
-  /** @var array An array with major, minor, and revision keys, describing the MacOS version */
-  protected $_DarwinVersion = [];
-  /** @var int The number of physical CPU cores on this Mac hardware */
-  protected $_Cores;
 
   // region //////////////////////////////////////////////// Symfony Command Methods
 
@@ -37,6 +33,11 @@ class AbstractUpdateConsole extends AbstractConsole
         ->addOption('shutdown', null, InputOption::VALUE_NONE, 'Only include shutdown updates')
         ->addOption('no-scan', null, InputOption::VALUE_NONE, 'Do not scan for new updates')
     ;
+  }
+
+  protected function isAllowUserOption()
+  {
+    return false;
   }
 
   // endregion ///////////////////////////////////////////// End Symfony Copmmand Methods
@@ -245,6 +246,8 @@ class AbstractUpdateConsole extends AbstractConsole
   /**
    * Determines whether the given MacUpdate object should be included in this command instance.
    *
+   * @param MacUpdate $MacUpdate
+   *
    * @return bool
    */
   protected function isIncluded(MacUpdate $MacUpdate)
@@ -294,31 +297,6 @@ class AbstractUpdateConsole extends AbstractConsole
   // region //////////////////////////////////////////////// System Information Functions
 
   /**
-   * Returns the number of physical CPU cores.
-   *
-   * @return int
-   */
-  protected function getCpuCores()
-  {
-    if (empty($this->_Cores))
-    {
-      $this->_Cores = (int) shell_exec('sysctl -n hw.physicalcpu');
-    }
-
-    return $this->_Cores;
-  }
-
-  /**
-   * Returns the username of the user currently logged into the macOS GUI.
-   *
-   * @return string|null
-   */
-  protected function getConsoleUser()
-  {
-    return $this->getShellExec("/usr/sbin/scutil <<< \"show State:/Users/ConsoleUser\" | /usr/bin/awk '/Name :/ && ! /loginwindow/ { print $3 }'");
-  }
-
-  /**
    * Returns the ID of the user currently logged inot the macOS GUI.
    *
    * @return string|null
@@ -326,89 +304,6 @@ class AbstractUpdateConsole extends AbstractConsole
   protected function getConsoleUserId()
   {
     return $this->getUserId($this->getConsoleUser());
-  }
-
-  /**
-   * Returns an array with keys for the major, minor, and revision of MacOS currently running.
-   *
-   * @return array|int[]
-   */
-  protected function getMacOsVersion()
-  {
-    if (empty($this->_DarwinVersion))
-    {
-      if ($v = $this->getShellExec('sw_vers -productVersion'))
-      {
-        $parts = explode('.', $v);
-
-        $major = !empty($parts[0]) ? $parts[0] : 10;
-        $minor = !empty($parts[1]) ? $parts[1] : 1;
-        $rev   = !empty($parts[2]) ? $parts[2] : 0;
-
-        $this->_DarwinVersion = ['major' => $major, 'minor' => $minor, 'revision' => $rev];
-      }
-    }
-
-    return $this->_DarwinVersion;
-  }
-
-  /**
-   * Returns the user id of the given username.
-   *
-   * @return string|null
-   */
-  protected function getUserId(string $user)
-  {
-    return $this->getShellExec(sprintf('/usr/bin/id -u %s', $user));
-  }
-
-  /**
-   * Determines if the system is running off of battery power, or AC power.
-   *
-   * @return bool
-   */
-  protected function isBatteryPowered()
-  {
-    $battery = $this->getShellExec('/usr/bin/pmset -g ps');
-
-    return false !== strpos($battery, 'Battery Power');
-  }
-
-  /**
-   * Determines if the OS version is Catalina or greater.
-   *
-   * @return bool
-   */
-  protected function isCatalinaUp()
-  {
-    $version = $this->getMacOsVersion();
-
-    return $version['minor'] >= 15;
-  }
-
-  /**
-   * Determines if the display is prevented from sleeping by an assertation, usually an indicator that a presentation
-   * or video conference is currently running.
-   *
-   * @return string|null
-   */
-  protected function isDisplaySleepPrevented()
-  {
-    $a = $this->getShellExec("/usr/bin/pmset -g assertions | /usr/bin/awk '/NoDisplaySleepAssertion | PreventUserIdleDisplaySleep/ && match($0,/\(.+\)/) && ! /coreaudiod/ {gsub(/^\ +/,\"\",$0); print};'");
-
-    return !empty($a);
-  }
-
-  /**
-   * Determines if the OS is currently encrypting a FileVault.
-   *
-   * @return bool
-   */
-  protected function isEncryptingFileVault()
-  {
-    $fv = $this->getShellExec('/usr/bin/fdesetup status');
-
-    return false !== strpos($fv, 'Encryption in progress');
   }
 
   /**
@@ -421,40 +316,10 @@ class AbstractUpdateConsole extends AbstractConsole
   {
     if (function_exists('sys_getloadavg'))
     {
-      $cores = $this->getCpuCores();
+      $cores = $this->getDevice()->getCpuCores();
       $load  = sys_getloadavg();
 
       return isset($load[0]) && (float) $load[0] > $cores;
-    }
-
-    return false;
-  }
-
-  /**
-   * Determines if the Mac has a T2 security chip.
-   *
-   * @return bool
-   */
-  protected function isSecurityChip()
-  {
-    $bridge = $this->getShellExec("/usr/sbin/system_profiler SPiBridgeDataType | /usr/bin/awk -F: '/Model Name/ { gsub(/.*: /,\"\"); print $0}'");
-
-    return !empty($bridge);
-  }
-
-  /**
-   * Determines if the MacOS Secure Boot feature is set to "full".
-   *
-   * @return bool
-   */
-  protected function isSecureBoot()
-  {
-    $P = Process::fromShellCommandline("nvram 94b73556-2197-4702-82a8-3e1337dafbfb:AppleSecureBootPolicy | awk '{ print $2 }'");
-    $P->run();
-
-    if ($P->isSuccessful())
-    {
-      return false !== strpos($P->getOutput(), '%02');
     }
 
     return false;
