@@ -37,7 +37,8 @@ The most useful command is `summary`, which will output a count of total, recomm
  - Is Secure Boot Enabled?    
  - Is System on Battery Power?    
  - Is Screen Sleep Prevented?    
- - Is Encryption in Progress?    
+ - Is Encryption in Progress?
+ - How much disk space is free?
     
 |Flags  | Purpose |    
 |--|--|    

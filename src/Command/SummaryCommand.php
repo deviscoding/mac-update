@@ -43,6 +43,7 @@ class SummaryCommand extends AbstractUpdateConsole
       $this->io()->info('Updates Requiring Shutdown', 50)->msgln($summary['shutdown']);
       $this->io()->blankln();
       $this->io()->info('Console Username', 50)->msgln($summary['console_user']);
+      $this->io()->info('Free Disk Space', 50)->msgln($summary['disk_space'].'GiB');
       $this->io()->info('Has T2 Security Chip', 50)->msgln($summary['security_chip'] ? 'Yes' : 'No');
       $this->io()->info('Has Secure Boot', 50)->msgln($summary['secure_boot'] ? 'Yes' : 'No');
       $this->io()->blankln();
@@ -97,12 +98,13 @@ class SummaryCommand extends AbstractUpdateConsole
         'restart'        => 0,
         'shutdown'       => 0,
         'battery'        => $this->isBatteryPowered(),
+        'console_user'   => $this->getConsoleUser(),
+        'console_userid' => $this->getConsoleUserId(),
+        'disk_space'     => $this->getDevice()->getFreeDiskSpace(),
         'encrypting'     => $this->isEncryptingFileVault(),
         'prevent_sleep'  => $this->isDisplaySleepPrevented(),
         'security_chip'  => $this->isSecurityChip(),
         'secure_boot'    => $this->isSecureBoot(),
-        'console_user'   => $this->getConsoleUser(),
-        'console_userid' => $this->getConsoleUserId(),
     ];
 
     foreach ($Updates as $Update)
