@@ -15,7 +15,9 @@ This software does not have any non-native dependencies, however installation of
     
 Usage involves first reading the rest of this README, then running one of the commands with various flags described below.  For example to run the _list_ command:    
     
- /usr/local/bin/macupdate list --recommended --restart  This will display a list of all pending updates that are recommend and require a restart.    
+    /usr/local/bin/macupdate list --recommended --restart 
+    
+This will display a list of all pending updates that are recommend and require a restart.    
     
 ## Important Difference    
  It is important to note the one way in which MacUpdate differs from using the `softwareupdate` binary directly, which involves the usage of the `--restart` and `--shutdown` flags.    
