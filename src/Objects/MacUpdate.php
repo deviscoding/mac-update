@@ -144,6 +144,8 @@ class MacUpdate implements \JsonSerializable
 
   /**
    * @param bool $shutdown
+   *
+   * @return MacUpdate
    */
   public function setShutdown($shutdown): MacUpdate
   {
