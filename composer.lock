@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4aeba9755b087c5c2e81f65d615da249",
+    "content-hash": "25edc2ea1b0d6b0a9c3c3ee92945bdc1",
     "packages": [
         {
             "name": "deviscoding/mac-console",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/deviscoding/mac-console.git",
-                "reference": "4af312aa73c23c88a4c96d01229c66d8a5818d8f"
+                "reference": "ea95c5301652ab9e328bf6f7dd68c4c892c73e6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/deviscoding/mac-console/zipball/4af312aa73c23c88a4c96d01229c66d8a5818d8f",
-                "reference": "4af312aa73c23c88a4c96d01229c66d8a5818d8f",
+                "url": "https://api.github.com/repos/deviscoding/mac-console/zipball/ea95c5301652ab9e328bf6f7dd68c4c892c73e6e",
+                "reference": "ea95c5301652ab9e328bf6f7dd68c4c892c73e6e",
                 "shasum": ""
             },
             "require": {
@@ -25,7 +25,8 @@
                 "ext-posix": "*",
                 "jonesiscoding/base-console": "^1.0",
                 "phlak/semver": "^3.2",
-                "php": "^7.0"
+                "php": "^7.0",
+                "symfony/process": "^4.4"
             },
             "type": "library",
             "autoload": {
@@ -44,7 +45,7 @@
                 }
             ],
             "description": "Parent class with convenience functions for creating macOS CLI commands using the Symfony console component.",
-            "time": "2020-12-02T15:14:14+00:00"
+            "time": "2020-12-02T19:30:45+00:00"
         },
         {
             "name": "jonesiscoding/base-console",

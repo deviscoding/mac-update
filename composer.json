@@ -1,5 +1,7 @@
 {
     "name": "deviscoding/mac-update",
+    "description": "CLI tool to ease management of software updates on macOS, ideal for automation by system administrators.",
+    "keywords": ["macos","osx","softwareupdate","apple","mac","macadmin","jamf","jss","mdm"],
     "type": "project",
     "authors": [
         {
@@ -12,12 +14,12 @@
             "DevCoding\\Mac\\Update\\": "src"
         }
     },
-    "version": "1.6.2",
+    "version": "1.6.3",
     "require": {
         "php": "^7.0",
         "ext-json": "*",
         "jonesiscoding/base-console": "^1.0",
         "symfony/process": "^4.4",
-        "deviscoding/mac-console": "^1.2.1"
+        "deviscoding/mac-console": "^1.2.2"
     }
 }
