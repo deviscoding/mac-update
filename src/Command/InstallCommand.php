@@ -138,7 +138,7 @@ class InstallCommand extends AbstractUpdateConsole
    */
   protected function runSoftwareUpdate($cmd, &$errors = [])
   {
-    $P = Process::fromShellCommandline($cmd);
+    $P = Process::fromShellCommandline($cmd)->setTimeout(1200)->setIdleTimeout(1200);
     $P->run();
 
     if (!$P->isSuccessful())
