@@ -14,7 +14,7 @@
             "DevCoding\\Mac\\Update\\": "src"
         }
     },
-    "version": "1.6.4",
+    "version": "1.7",
     "require": {
         "php": "^7.0",
         "ext-json": "*",

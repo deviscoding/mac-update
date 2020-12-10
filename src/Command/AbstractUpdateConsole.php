@@ -32,6 +32,7 @@ class AbstractUpdateConsole extends AbstractMacConsole
         ->addOption('restart', null, InputOption::VALUE_NONE, 'Only include restart updates')
         ->addOption('shutdown', null, InputOption::VALUE_NONE, 'Only include shutdown updates')
         ->addOption('no-scan', null, InputOption::VALUE_NONE, 'Do not scan for new updates')
+        ->addOption('timeout', null, InputOption::VALUE_REQUIRED, 'Software Update timeout in seconds.', $this->getDefaultTimeout())
     ;
   }
 
@@ -40,7 +41,34 @@ class AbstractUpdateConsole extends AbstractMacConsole
     return false;
   }
 
-  // endregion ///////////////////////////////////////////// End Symfony Copmmand Methods
+  /**
+   * Returns the default number of seconds that softwareupdate should be allowed to run before determining that
+   * it has stalled.  This can be overridden with the --timeout option.
+   *
+   * @return int
+   */
+  protected function getDefaultTimeout()
+  {
+    return 7200; # 2 Hours
+  }
+
+  /**
+   * Returns the default number of seconds that softwareupdate should be allowed to run before determining that
+   * it has stalled.  Set with the --timeout option, which provides a default based on the getDefaultTimeout method.
+   *
+   * @throws \Exception If for some reason, the value of the timeout option is falsy.
+   */
+  private function getTimeout()
+  {
+    if (!$timeout = $this->io()->getOption('timeout'))
+    {
+      throw new \Exception('A default timeout for softwareupdate was not provided.');
+    }
+
+    return (is_numeric($timeout) && $timeout > 0) ? $timeout : null;
+  }
+
+  // endregion ///////////////////////////////////////////// End Symfony Command Methods
 
   // region //////////////////////////////////////////////// Software Update Methods
 
@@ -162,10 +190,11 @@ class AbstractUpdateConsole extends AbstractMacConsole
       if ($suBin = $this->getSoftwareUpdate())
       {
         // Create Process
+        $timeout = $this->getTimeout();
         $noScan  = $this->isNoScan() ? '--no-scan' : null;
         $Process = Process::fromShellCommandline(trim(sprintf('%s -l %s', $suBin, $noScan)));
         // Eliminate Timeouts
-        $Process->setIdleTimeout(null)->setTimeout(null);
+        $Process->setIdleTimeout($timeout)->setTimeout($timeout);
         // Run the Process
         $Process->run();
 
@@ -300,7 +329,8 @@ class AbstractUpdateConsole extends AbstractMacConsole
    */
   protected function runSoftwareUpdate($cmd, &$errors = [])
   {
-    $P = Process::fromShellCommandline($cmd)->setTimeout(86400)->setIdleTimeout(86400);
+    $t = $this->getTimeout();
+    $P = Process::fromShellCommandline($cmd)->setTimeout($t)->setIdleTimeout($t);
     $P->run();
 
     if (!$P->isSuccessful())

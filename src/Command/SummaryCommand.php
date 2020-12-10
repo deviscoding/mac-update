@@ -14,6 +14,7 @@ class SummaryCommand extends AbstractUpdateConsole
     $this->setName('summary');
     $this->addOption('json', null, InputOption::VALUE_NONE, 'Output results in JSON');
     $this->addOption('no-scan', null, InputOption::VALUE_NONE, 'Do not scan for new updates.');
+    $this->addOption('timeout', null, InputOption::VALUE_REQUIRED, 'Software Update timeout in seconds.', $this->getDefaultTimeout());
   }
 
   protected function execute(InputInterface $input, OutputInterface $output)

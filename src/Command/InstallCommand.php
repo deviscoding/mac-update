@@ -22,6 +22,14 @@ class InstallCommand extends AbstractUpdateConsole
     return $this->io()->getOption('force') ? true : false;
   }
 
+  /**
+   * @return int
+   */
+  protected function getDefaultTimeout()
+  {
+    return 21600; #6 Hours
+  }
+
   protected function execute(InputInterface $input, OutputInterface $output)
   {
     $errors     = [];

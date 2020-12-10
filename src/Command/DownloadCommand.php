@@ -14,6 +14,11 @@ class DownloadCommand extends AbstractUpdateConsole
     parent::configure();
   }
 
+  protected function getDefaultTimeout()
+  {
+    return 14400; # 4 Hours
+  }
+
   protected function execute(InputInterface $input, OutputInterface $output)
   {
     $this->io()->msg('Checking For Updates', 50);

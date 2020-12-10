@@ -17,7 +17,7 @@ Usage involves first reading the rest of this README, then running one of the co
     
     /usr/local/bin/macupdate list --recommended --restart 
     
-This will display a list of all pending updates that are recommend and require a restart.    
+This will display a list of all pending updates that are recommended and require a restart.    
     
 ## Important Difference    
  It is important to note the one way in which MacUpdate differs from using the `softwareupdate` binary directly, which involves the usage of the `--restart` and `--shutdown` flags.    
@@ -46,6 +46,7 @@ The most useful command is `summary`, which will output a count of total, recomm
 |--|--|    
 | json | Output results in JSON format. |    
 | no-scan | Do not scan for new updates, used cached results. |  
+| timeout | The maximum time in seconds that the softwareupdate process should be allowed to run. |
 
 ### Wait Command
 This command is only useful when used in other scripting.  It will wait for the given number of seconds, or when conditions are met, based on the flags given at runtime.  The command can wait for the following conditions to clear:
@@ -84,7 +85,8 @@ An example of where this command is useful is when users can only access the Sof
 |Flags  | Purpose |    
 |--|--|    
 | json | Output results in JSON format. |    
-| no-scan | Do not scan for new updates, used cached results. |    
+| no-scan | Do not scan for new updates, used cached results. |
+| timeout | The maximum time in seconds that the softwareupdate process should be allowed to download. |
 | recommend | Only include recommended updates. |    
 | restart | Only include updates requiring a restart. |    
 | shutdown | Only include updates requiring a shutdown. |    
@@ -104,6 +106,7 @@ Several conditions are checked to verify that it is safe to install updates:
 |--|--|    
 | json | Output results in JSON format. |    
 | no-scan | Do not scan for new updates, used cached results. |    
+| timeout | The maximum time in seconds that the softwareupdate process should be allowed to run. |
 | force | Install even if on battery power or user is logged in. |  
 | recommend | Only include recommended updates. |    
 | restart | Only include updates requiring a restart. |    
@@ -116,6 +119,7 @@ Several conditions are checked to verify that it is safe to install updates:
 |--|--|    
 | json | Output results in JSON format. |    
 | no-scan | Do not scan for new updates, used cached results. |    
+| timeout | The maximum time in seconds that the softwareupdate process should be allowed to run. |
 | quiet | Displays only the name of the updates. |    
 | recommend | Only include recommended updates. |    
 | restart | Only include updates requiring a restart. |    
@@ -129,6 +133,7 @@ This command is mostly redundant; the `summary` command is more useful, and can 
 |Flags  | Purpose |    
 |--|--|    
 | no-scan | Do not scan for new updates, used cached results. |    
+| timeout | The maximum time in seconds that the softwareupdate process should be allowed to run. |
 | quiet | Display no results, just a return code. |    
 | recommend | Only include recommended updates. |    
 | restart | Only include updates requiring a restart. |    
