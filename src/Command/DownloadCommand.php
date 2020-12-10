@@ -24,20 +24,18 @@ class DownloadCommand extends AbstractUpdateConsole
     foreach ($Updates as $macUpdate)
     {
       $this->io()->info('Downloading '.$macUpdate->getName(), 50);
-      exec(sprintf('%s --no-scan --download "%s"', $this->getSoftwareUpdate(), $macUpdate->getId()), $output, $retval);
 
-      if (0 !== $retval)
+      $info = [];
+      $cmd = sprintf('%s --no-scan --download "%s"', $this->getSoftwareUpdate(), $macUpdate->getId());
+      if (!$this->runSoftwareUpdate($cmd, $info))
       {
-        $errors = true;
         $this->io()->error('[ERROR]');
-        foreach ($output as $line)
-        {
-          if ('Software Update Tool' != $line && !empty($line))
+
+        foreach($info as $line)
           {
             $this->io()->writeln('  '.$line);
           }
         }
-      }
       else
       {
         $this->io()->successln('[SUCCESS]');
