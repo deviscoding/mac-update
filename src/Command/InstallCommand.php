@@ -131,55 +131,6 @@ class InstallCommand extends AbstractUpdateConsole
   }
 
   /**
-   * @param string $cmd    The software update command to run
-   * @param array  $errors Set by reference; any errors generated
-   *
-   * @return bool TRUE if successful; FALSE if not
-   */
-  protected function runSoftwareUpdate($cmd, &$errors = [])
-  {
-    $P = Process::fromShellCommandline($cmd)->setTimeout(86400)->setIdleTimeout(86400);
-    $P->run();
-
-    if (!$P->isSuccessful())
-    {
-      $output = !empty($P->getErrorOutput()) ? $P->getErrorOutput() : $P->getOutput();
-      $oLines = explode("\n", $output);
-      foreach ($oLines as $line)
-      {
-        if ('Software Update Tool' != $line && !empty($line))
-        {
-          $errors[] = $line;
-        }
-      }
-
-      return false;
-    }
-    else
-    {
-      $disk = 'Not enough free disk space';
-      $out  = $P->getOutput();
-      $err  = $P->getErrorOutput();
-      if (false !== strpos($out, $disk) || false !== strpos($err, $disk))
-      {
-        $lines = explode("\n", $out."\n".$err);
-        foreach ($lines as $line)
-        {
-          if (false !== strpos($line, $disk))
-          {
-            $errors[] = $line;
-            $errors[] = sprintf('Only %sGB Free Space Available.', $this->getFreeDiskSpace());
-
-            return false;
-          }
-        }
-      }
-    }
-
-    return true;
-  }
-
-  /**
    * @return bool
    */
   protected function isRecommended()
@@ -221,13 +172,5 @@ class InstallCommand extends AbstractUpdateConsole
     }
 
     return false;
-  }
-
-  /**
-   * @return string|null
-   */
-  protected function getFreeDiskSpace()
-  {
-    return $this->getShellExec("/bin/df -g / | /usr/bin/awk '(NR == 2){print $4}'");
   }
 }
