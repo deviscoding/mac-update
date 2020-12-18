@@ -24,7 +24,7 @@ class ListCommand extends AbstractUpdateConsole
       $this->io()->getOutput()->setVerbosity(OutputInterface::VERBOSITY_QUIET);
     }
 
-    $this->io()->msg('Checking For Updates', 50);
+    $this->io()->blankln()->msg('Checking For Updates', 60);
     $Updates = $this->getUpdateList();
     $this->io()->successln('[SUCCESS]');
     $this->io()->blankln();
@@ -63,7 +63,7 @@ class ListCommand extends AbstractUpdateConsole
         }
         else
         {
-          $this->io()->msg($Update->getName(), 60);
+          $this->io()->info($Update->getName(), 60);
           $this->io()->write($Update->getSize().'K', null, 15);
 
           $last = [];

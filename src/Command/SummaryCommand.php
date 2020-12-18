@@ -80,6 +80,8 @@ class SummaryCommand extends AbstractUpdateConsole
       {
         $this->io()->successln('No');
       }
+
+      $this->io()->blankln();
     }
 
     return self::EXIT_ERROR;
