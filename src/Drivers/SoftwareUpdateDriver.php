@@ -16,12 +16,12 @@ class SoftwareUpdateDriver extends Process
    */
   public static function fromFlags($flags)
   {
-    $cmd = 'softwareupdate ';
+    $cmd = 'softwareupdate';
     foreach ($flags as $flag => $value)
     {
-      if (false !== !$value)
+      if (false !== $value)
       {
-        $cmd .= '--'.$flag;
+        $cmd .= ' --'.$flag;
 
         if (!empty($value) && true !== $value)
         {
