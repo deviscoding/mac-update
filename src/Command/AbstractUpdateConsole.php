@@ -49,14 +49,14 @@ class AbstractUpdateConsole extends AbstractMacConsole
    */
   protected function getDefaultTimeout()
   {
-    return 7200; # 2 Hours
+    return 7200; // 2 Hours
   }
 
   /**
    * Returns the default number of seconds that softwareupdate should be allowed to run before determining that
    * it has stalled.  Set with the --timeout option, which provides a default based on the getDefaultTimeout method.
    *
-   * @throws \Exception If for some reason, the value of the timeout option is falsy.
+   * @throws \Exception if for some reason, the value of the timeout option is falsy
    */
   private function getTimeout()
   {
@@ -279,7 +279,7 @@ class AbstractUpdateConsole extends AbstractMacConsole
    *
    * @return bool
    */
-  protected function isIncluded(MacUpdate $MacUpdate)
+  protected function isIncluded($MacUpdate)
   {
     $isRecommended = $this->io()->getOption('recommended') ? true : false;
     $isRestart     = $this->io()->getOption('restart') ? true : false;
