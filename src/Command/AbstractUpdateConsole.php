@@ -105,7 +105,14 @@ class AbstractUpdateConsole extends AbstractMacConsole
           }
           elseif ('Action' == $key && 'restart' == $val)
           {
-            $Update->setRestart(true);
+            if ($this->isShutdownUpdate($Update))
+            {
+              $Update->setShutdown(true);
+            }
+            else
+            {
+              $Update->setRestart(true);
+            }
           }
           elseif ('Action' == $key && 'shut down' == $val)
           {
@@ -150,10 +157,16 @@ class AbstractUpdateConsole extends AbstractMacConsole
 
         if (false !== strpos($parts[3], 'restart'))
         {
-          $Update->setRestart(true);
+          if ($this->isShutdownUpdate($Update))
+          {
+            $Update->setShutdown(true);
+          }
+          else
+          {
+            $Update->setRestart(true);
+          }
         }
-
-        if (false !== strpos($parts[3], 'halt') || false !== strpos($parts[3], 'shut down'))
+        elseif (false !== strpos($parts[3], 'halt') || false !== strpos($parts[3], 'shut down'))
         {
           $Update->setShutdown(true);
         }
@@ -161,6 +174,36 @@ class AbstractUpdateConsole extends AbstractMacConsole
     }
 
     return $Update;
+  }
+
+  /**
+   * @param MacUpdate $Update
+   *
+   * @return bool
+   */
+  protected function isShutdownUpdate($Update)
+  {
+    if ($this->getDevice()->isSecurityChip())
+    {
+      $search = str_replace('-'.(string) $this->getOs()->getVersion(), '', $Update->getId());
+      $result = $this->getShellExec(sprintf('cat /var/log/install.log | grep "%s" | tail -1', $search));
+
+      if (preg_match('#^\s*([^|]*)\s*|#', $result, $matches))
+      {
+        $log   = '/var/log/install.log';
+        $index = trim($matches[1]);
+        $date  = substr(date('Y-m-d H:i'), -1);
+        $cmd   = sprintf('cat %s | grep "%s requires bridgeOS update" | grep "%s"', $log, $index, $date);
+        $grep  = $this->getShellExec($cmd);
+
+        if (!empty($grep))
+        {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   /**
