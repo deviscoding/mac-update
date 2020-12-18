@@ -234,7 +234,8 @@ class AbstractUpdateConsole extends AbstractMacConsole
       {
         // Create Process
         $timeout = $this->getTimeout();
-        $flags   = $this->isNoScan() ? ['list', 'no-scan'] : ['list'];
+        $noscan  = $this->isNoScan() ? ['no-scan'] : [];
+        $flags   = array_merge(['list' => true, 'all' => true], $noscan);
 
         $Process = SoftwareUpdateDriver::fromFlags($flags);
         // Eliminate Timeouts
