@@ -2,6 +2,7 @@
 
 namespace DevCoding\Mac\Update\Command;
 
+use DevCoding\Mac\Update\Drivers\SoftwareUpdateDriver;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -16,12 +17,12 @@ class DownloadCommand extends AbstractUpdateConsole
 
   protected function getDefaultTimeout()
   {
-    return 14400; # 4 Hours
+    return 14400; // 4 Hours
   }
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
-    $this->io()->msg('Checking For Updates', 50);
+    $this->io()->blankln()->msg('Checking For Updates', 50);
     $Updates = $this->getValidUpdates();
     $this->io()->successln('[SUCCESS]');
     $errors = false;
@@ -30,22 +31,27 @@ class DownloadCommand extends AbstractUpdateConsole
     {
       $this->io()->info('Downloading '.$macUpdate->getName(), 50);
 
-      $info = [];
-      $cmd = sprintf('%s --no-scan --download "%s"', $this->getSoftwareUpdate(), $macUpdate->getId());
-      if (!$this->runSoftwareUpdate($cmd, $info))
+      $flags = ['no-scan' => true, 'download' => $macUpdate->getId()];
+
+      $SU = SoftwareUpdateDriver::fromFlags($flags);
+      $SU->run();
+
+      if (!$SU->isSuccessful())
       {
         $this->io()->error('[ERROR]');
 
-        foreach($info as $line)
-          {
-            $this->io()->writeln('  '.$line);
-          }
+        foreach ($SU->getErrorOutput(true) as $line)
+        {
+          $this->io()->writeln('  '.$line);
         }
+      }
       else
       {
         $this->io()->successln('[SUCCESS]');
       }
     }
+
+    $this->io()->blankln();
 
     return ($errors) ? self::EXIT_ERROR : self::EXIT_SUCCESS;
   }

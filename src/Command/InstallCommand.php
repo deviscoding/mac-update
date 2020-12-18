@@ -2,11 +2,11 @@
 
 namespace DevCoding\Mac\Update\Command;
 
+use DevCoding\Mac\Update\Drivers\SoftwareUpdateDriver;
 use DevCoding\Mac\Update\Objects\MacUpdate;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
 
 class InstallCommand extends AbstractUpdateConsole
 {
@@ -27,7 +27,7 @@ class InstallCommand extends AbstractUpdateConsole
    */
   protected function getDefaultTimeout()
   {
-    return 21600; #6 Hours
+    return 21600; //6 Hours
   }
 
   protected function execute(InputInterface $input, OutputInterface $output)
@@ -101,10 +101,13 @@ class InstallCommand extends AbstractUpdateConsole
       $this->io()->msgln('Downloading and installing updates.  The system will restart when appropriate.');
       $cmd = sprintf('%s --install -%s%s', $this->getSoftwareUpdate(), implode(' ', $switches), $noscan);
 
-      if (!$this->runSoftwareUpdate($cmd, $errors))
+      $SU = SoftwareUpdateDriver::fromShellCommandline($cmd);
+      $SU->run();
+
+      if (!$SU->isSuccessful())
       {
         $this->io()->blankln();
-        foreach ($errors as $error)
+        foreach ($SU->getErrorOutput(true) as $error)
         {
           $this->io()->errorln($error);
         }
@@ -112,11 +115,12 @@ class InstallCommand extends AbstractUpdateConsole
 
         return self::EXIT_ERROR;
       }
-      else
+      elseif ($SU->isShutdown() || $SU->isRestart())
       {
         // If we got here, the system probably didn't shut down or restart as needed
         $tpl = 'The system installed an update that requires a {t}, but did not {t}.  Please {t}';
-        $msg = str_replace('{t}', $isShutdown ? 'SHUTDOWN' : 'RESTART', $tpl);
+        $act = ($SU->isShutdown()) ? 'SHUTDOWN' : 'RESTART';
+        $msg = str_replace('{t}', $act, $tpl);
         $this->io()->errorln($msg);
         $this->io()->blankln();
 
@@ -129,10 +133,14 @@ class InstallCommand extends AbstractUpdateConsole
       foreach ($Updates as $macUpdate)
       {
         $this->io()->info('Installing '.$macUpdate->getName(), 50);
-        $cmd = sprintf('%s --no-scan --install "%s"', $this->getSoftwareUpdate(), $macUpdate->getId());
+        $flags = ['no-scan' => true, 'install' => $macUpdate->getId()];
 
-        if (!$this->runSoftwareUpdate($cmd, $err))
+        $SU = SoftwareUpdateDriver::fromFlags($flags);
+        $SU->run();
+
+        if (!$SU->isSuccessful())
         {
+          $err      = $SU->getErrorOutput(true);
           $errors[] = array_merge($errors, $err);
           $this->io()->errorln('[ERROR]');
           foreach ($err as $e)
