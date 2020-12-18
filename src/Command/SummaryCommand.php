@@ -104,7 +104,6 @@ class SummaryCommand extends AbstractUpdateConsole
         'encrypting'     => $this->isEncryptingFileVault(),
         'prevent_sleep'  => $this->isDisplaySleepPrevented(),
         'security_chip'  => $this->isSecurityChip(),
-        'secure_boot'    => $this->isSecureBoot(),
     ];
 
     foreach ($Updates as $Update)
