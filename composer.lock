@@ -4,26 +4,26 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d958bd0d2ac7b9dbadb959d776fee84",
+    "content-hash": "879f75d892d0d5133014984338b6e8ea",
     "packages": [
         {
             "name": "deviscoding/mac-console",
-            "version": "1.2.3",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/deviscoding/mac-console.git",
-                "reference": "113fd03332cdb80b7932cd967c79681abddcaa81"
+                "reference": "49372025fd37adbceabd953eb1281e6411475406"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/deviscoding/mac-console/zipball/113fd03332cdb80b7932cd967c79681abddcaa81",
-                "reference": "113fd03332cdb80b7932cd967c79681abddcaa81",
+                "url": "https://api.github.com/repos/deviscoding/mac-console/zipball/49372025fd37adbceabd953eb1281e6411475406",
+                "reference": "49372025fd37adbceabd953eb1281e6411475406",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-posix": "*",
-                "jonesiscoding/base-console": "^1.0",
+                "jonesiscoding/base-console": "^4.4",
                 "phlak/semver": "^3.2",
                 "php": "^7.0",
                 "symfony/process": "^4.4"
@@ -45,24 +45,29 @@
                 }
             ],
             "description": "Parent class with convenience functions for creating macOS CLI commands using the Symfony console component.",
-            "time": "2020-12-14T16:19:42+00:00"
+            "support": {
+                "issues": "https://github.com/deviscoding/mac-console/issues",
+                "source": "https://github.com/deviscoding/mac-console/tree/v1.4.2"
+            },
+            "time": "2020-12-18T15:32:25+00:00"
         },
         {
             "name": "jonesiscoding/base-console",
-            "version": "1.0.4",
+            "version": "4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jonesiscoding/base-console.git",
-                "reference": "b22c2be288b85b0344c5f2dddc7c591aef9ba4b8"
+                "reference": "7ff89ca998220b904d1aa4ca2020f3e2515a5a76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jonesiscoding/base-console/zipball/b22c2be288b85b0344c5f2dddc7c591aef9ba4b8",
-                "reference": "b22c2be288b85b0344c5f2dddc7c591aef9ba4b8",
+                "url": "https://api.github.com/repos/jonesiscoding/base-console/zipball/7ff89ca998220b904d1aa4ca2020f3e2515a5a76",
+                "reference": "7ff89ca998220b904d1aa4ca2020f3e2515a5a76",
                 "shasum": ""
             },
             "require": {
-                "symfony/console": "^4.4"
+                "symfony/console": "^4.4",
+                "symfony/process": "^4.4"
             },
             "type": "library",
             "autoload": {
@@ -89,9 +94,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jonesiscoding/base-console/issues",
-                "source": "https://github.com/jonesiscoding/base-console/tree/master"
+                "source": "https://github.com/jonesiscoding/base-console/tree/v4.4"
             },
-            "time": "2020-02-23T14:42:56+00:00"
+            "time": "2020-12-16T23:03:09+00:00"
         },
         {
             "name": "phlak/semver",
@@ -136,6 +141,10 @@
                 }
             ],
             "description": "Semantic versioning helper library",
+            "support": {
+                "issues": "https://github.com/PHLAK/SemVer/issues",
+                "source": "https://github.com/PHLAK/SemVer/tree/master"
+            },
             "funding": [
                 {
                     "url": "https://github.com/sponsors/PHLAK",
@@ -203,16 +212,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.4.17",
+            "version": "v4.4.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "c8e37f6928c19816437a4dd7bf16e3bd79941470"
+                "reference": "12e071278e396cc3e1c149857337e9e192deca0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/c8e37f6928c19816437a4dd7bf16e3bd79941470",
-                "reference": "c8e37f6928c19816437a4dd7bf16e3bd79941470",
+                "url": "https://api.github.com/repos/symfony/console/zipball/12e071278e396cc3e1c149857337e9e192deca0b",
+                "reference": "12e071278e396cc3e1c149857337e9e192deca0b",
                 "shasum": ""
             },
             "require": {
@@ -271,6 +280,9 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/console/tree/v4.4.18"
+            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -285,7 +297,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-28T10:15:42+00:00"
+            "time": "2020-12-18T07:41:31+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -348,6 +360,9 @@
                 "portable",
                 "shim"
             ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.20.0"
+            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -424,6 +439,9 @@
                 "portable",
                 "shim"
             ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-php73/tree/v1.20.0"
+            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -504,6 +522,9 @@
                 "portable",
                 "shim"
             ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.20.0"
+            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -522,16 +543,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v4.4.17",
+            "version": "v4.4.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "ec1482f13d53911a8a32e54ba6f9a3b43a57d943"
+                "reference": "075316ff72233ce3d04a9743414292e834f2cb4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/ec1482f13d53911a8a32e54ba6f9a3b43a57d943",
-                "reference": "ec1482f13d53911a8a32e54ba6f9a3b43a57d943",
+                "url": "https://api.github.com/repos/symfony/process/zipball/075316ff72233ce3d04a9743414292e834f2cb4a",
+                "reference": "075316ff72233ce3d04a9743414292e834f2cb4a",
                 "shasum": ""
             },
             "require": {
@@ -562,6 +583,9 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/process/tree/v4.4.18"
+            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -576,7 +600,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-02T15:10:16+00:00"
+            "time": "2020-12-08T16:59:59+00:00"
         },
         {
             "name": "symfony/service-contracts",
@@ -638,6 +662,9 @@
                 "interoperability",
                 "standards"
             ],
+            "support": {
+                "source": "https://github.com/symfony/service-contracts/tree/v1.1.9"
+            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -663,8 +690,9 @@
     "prefer-lowest": false,
     "platform": {
         "php": "^7.0",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-curl": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }
