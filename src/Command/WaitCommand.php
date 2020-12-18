@@ -129,6 +129,6 @@ class WaitCommand extends AbstractUpdateConsole
       $this->io()->blankln();
     }
 
-    return $waitCpu || $waitPower || $waitUser || $waitScreen ? self::EXIT_ERROR : self::EXIT_SUCCESS;
+    return $waitCpu || $waitVault || $waitPower || $waitScreen || $waitUser ? self::EXIT_ERROR : self::EXIT_SUCCESS;
   }
 }
