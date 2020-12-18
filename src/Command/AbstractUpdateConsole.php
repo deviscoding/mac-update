@@ -3,9 +3,9 @@
 namespace DevCoding\Mac\Update\Command;
 
 use DevCoding\Mac\Command\AbstractMacConsole;
+use DevCoding\Mac\Update\Drivers\SoftwareUpdateDriver;
 use DevCoding\Mac\Update\Objects\MacUpdate;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Process\Process;
 
 /**
  * Class AbstractUpdateConsole.
@@ -234,8 +234,9 @@ class AbstractUpdateConsole extends AbstractMacConsole
       {
         // Create Process
         $timeout = $this->getTimeout();
-        $noScan  = $this->isNoScan() ? '--no-scan' : null;
-        $Process = Process::fromShellCommandline(trim(sprintf('%s -l %s', $suBin, $noScan)));
+        $flags   = $this->isNoScan() ? ['list', 'no-scan'] : ['list'];
+
+        $Process = SoftwareUpdateDriver::fromFlags($flags);
         // Eliminate Timeouts
         $Process->setIdleTimeout($timeout)->setTimeout($timeout);
         // Run the Process
@@ -246,16 +247,8 @@ class AbstractUpdateConsole extends AbstractMacConsole
         {
           throw new ProcessFailedException($Process);
         }
-        else
-        {
-          $outLines = $Process->getOutput();
-          if (empty($outLines))
-          {
-            $outLines = $Process->getErrorOutput();
-          }
-        }
 
-        $output = explode("\n", $outLines);
+        $output = $Process->getOutput(true);
         if (!empty($output))
         {
           $count = count($output);
@@ -373,45 +366,41 @@ class AbstractUpdateConsole extends AbstractMacConsole
   protected function runSoftwareUpdate($cmd, &$errors = [])
   {
     $t = $this->getTimeout();
-    $P = Process::fromShellCommandline($cmd)->setTimeout($t)->setIdleTimeout($t);
+    $P = SoftwareUpdateDriver::fromShellCommandline($cmd)->setTimeout($t)->setIdleTimeout($t);
     $P->run();
 
     if (!$P->isSuccessful())
     {
-      $output = !empty($P->getErrorOutput()) ? $P->getErrorOutput() : $P->getOutput();
-      $oLines = explode("\n", $output);
-      foreach($oLines as $line)
+      $errors = $P->getErrorOutput(true);
+      if (empty($errors))
       {
-        if ('Software Update Tool' != $line && !empty($line))
-        {
-          $errors[] = $line;
-        }
+        $errors = $P->getOutput(true);
       }
 
       return false;
     }
-    else
-    {
-      $disk = 'Not enough free disk space';
-      $out  = $P->getOutput();
-      $err  = $P->getErrorOutput();
-      if (false !== strpos($out, $disk) || false !== strpos($err, $disk))
-      {
-        $lines = explode("\n", $out . "\n" . $err);
-        foreach($lines as $line)
-        {
-          if (false !== strpos($line, $disk))
-          {
-            $errors[] = $line;
-            $errors[] = sprintf('Only %sGB Free Space Available.', $this->getFreeDiskSpace());
 
-            return false;
-          }
+    return true;
+  }
+
+  protected function getDiskSpaceError($Process)
+  {
+    $disk = 'Not enough free disk space';
+    $out  = $Process->getOutput();
+    $err  = $Process->getErrorOutput();
+    if (false !== strpos($out, $disk) || false !== strpos($err, $disk))
+    {
+      $lines = explode("\n", $out."\n".$err);
+      foreach ($lines as $line)
+      {
+        if (false !== strpos($line, $disk))
+        {
+          return $line;
         }
       }
     }
 
-    return true;
+    return null;
   }
 
   // endregion ///////////////////////////////////////////// End Software Update Methods
