@@ -43,8 +43,12 @@ class InstallCommand extends AbstractUpdateConsole
     $this->io()->msg('Checking for AC Power', 40);
     if ($this->isBatteryPowered() && !$this->isForced())
     {
-      $this->io()->errorln('[ERROR]');
+      $this->io()->errorln('[FAIL]');
       $errors[] = 'The system is running on battery power.';
+    }
+    else
+    {
+      $this->io()->successln('[PASS]');
     }
 
     // User Login Status if Shutdown or Restart is Required
@@ -53,8 +57,12 @@ class InstallCommand extends AbstractUpdateConsole
       $this->io()->msg('Checking User Login', 40);
       if (!empty($cUser) && !$this->isForced())
       {
-        $this->io()->errorln('[ERROR]');
+        $this->io()->errorln('[FAIL]');
         $errors[] = 'A user is logged in, and a shutdown or restart is required.';
+      }
+      else
+      {
+        $this->io()->successln('[PASS]');
       }
     }
 
@@ -62,8 +70,12 @@ class InstallCommand extends AbstractUpdateConsole
     $this->io()->msg('Checking File Vault', 40);
     if ($this->isEncryptingFileVault())
     {
-      $this->io()->errorln('[ERROR]');
+      $this->io()->errorln('[FAIL]');
       $errors[] = 'Updates cannot be installed while File Vault is encrypting.';
+    }
+    else
+    {
+      $this->io()->successln('[PASS]');
     }
 
     // EXIT IF ERRORS

@@ -46,7 +46,6 @@ class SummaryCommand extends AbstractUpdateConsole
       $this->io()->info('Console Username', 50)->msgln($summary['console_user']);
       $this->io()->info('Free Disk Space', 50)->msgln($summary['disk_space'].'GiB');
       $this->io()->info('Has T2 Security Chip', 50)->msgln($summary['security_chip'] ? 'Yes' : 'No');
-      $this->io()->info('Has Secure Boot', 50)->msgln($summary['secure_boot'] ? 'Yes' : 'No');
       $this->io()->blankln();
 
       // Battery Power
