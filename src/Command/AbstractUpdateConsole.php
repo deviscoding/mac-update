@@ -234,7 +234,7 @@ class AbstractUpdateConsole extends AbstractMacConsole
       {
         // Create Process
         $timeout = $this->getTimeout();
-        $noscan  = $this->isNoScan() ? ['no-scan'] : [];
+        $noscan  = $this->isNoScan() ? ['no-scan' => true] : [];
         $flags   = array_merge(['list' => true, 'all' => true], $noscan);
 
         $Process = SoftwareUpdateDriver::fromFlags($flags);
@@ -444,4 +444,6 @@ class AbstractUpdateConsole extends AbstractMacConsole
 
     return false;
   }
+
+  // endregion ///////////////////////////////////////////// End System Information Functions
 }
