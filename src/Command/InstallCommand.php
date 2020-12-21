@@ -96,7 +96,7 @@ class InstallCommand extends AbstractUpdateConsole
     {
       // Install all the updates at once
       $noscan   = $this->isNoScan() ? ' --no-scan' : null;
-      $switches = $this->isRecommended() ? ['a', 'r', 'R'] : ['a', 'R'];
+      $switches = $this->isRecommended() ? ['r', 'R'] : ['a', 'R'];
 
       $this->io()->msgln('Downloading and installing updates.  The system will restart when appropriate.');
       $cmd = sprintf('%s --install -%s%s', $this->getSoftwareUpdate(), implode(' ', $switches), $noscan);
