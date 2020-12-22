@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d444b4b4265317b44e5f6650f50be275",
+    "content-hash": "a579dd330204813991e2a1f6e9d749d7",
     "packages": [
         {
             "name": "deviscoding/mac-console",
