@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputOption;
 class AbstractUpdateConsole extends AbstractMacConsole
 {
   const PATTERN_DETAILS = '#^(.*), ([0-9]+)K\s?(.*)$#';
+  const OPTION_TIMEOUT  = 'timeout';
 
   /** @var string The full path to the softwareupdate binary */
   protected $_SoftwareUpdateBinary;
@@ -222,6 +223,31 @@ class AbstractUpdateConsole extends AbstractMacConsole
   }
 
   /**
+   * @param string[] $flags
+   *
+   * @return SoftwareUpdateDriver
+   * @throws \Exception
+   */
+  protected function getSoftwareUpdateDriver($flags)
+  {
+    $driver = SoftwareUpdateDriver::fromFlags($flags);
+
+    if ($timeout = $this->io()->getOption(self::OPTION_TIMEOUT))
+    {
+      if (is_numeric($timeout))
+      {
+        $driver->setTimeout($timeout)->setIdleTimeout($timeout);
+      }
+      else
+      {
+        throw new \Exception('The value of the timeout option must be a number.');
+      }
+    }
+
+    return $driver;
+  }
+
+  /**
    * @return MacUpdate[]
    *
    * @throws \Exception
@@ -237,9 +263,7 @@ class AbstractUpdateConsole extends AbstractMacConsole
         $noscan  = $this->isNoScan() ? ['no-scan' => true] : [];
         $flags   = array_merge(['list' => true, 'all' => true], $noscan);
 
-        $Process = SoftwareUpdateDriver::fromFlags($flags);
-        // Eliminate Timeouts
-        $Process->setIdleTimeout($timeout)->setTimeout($timeout);
+        $Process = $this->getSoftwareUpdateDriver($flags);
         // Run the Process
         $Process->run();
 

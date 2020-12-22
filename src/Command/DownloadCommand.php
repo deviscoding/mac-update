@@ -33,7 +33,7 @@ class DownloadCommand extends AbstractUpdateConsole
 
       $flags = ['no-scan' => true, 'download' => $macUpdate->getId()];
 
-      $SU = SoftwareUpdateDriver::fromFlags($flags);
+      $SU = $this->getSoftwareUpdateDriver($flags);
       $SU->run();
 
       if (!$SU->isSuccessful())

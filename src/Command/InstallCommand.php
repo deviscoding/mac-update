@@ -97,11 +97,12 @@ class InstallCommand extends AbstractUpdateConsole
       // Install all the updates at once
       $noscan   = $this->isNoScan() ? ' --no-scan' : null;
       $switches = $this->isRecommended() ? ['r', 'R'] : ['a', 'R'];
+      $timeout  = $this->io()->getOption('timeout');
 
       $this->io()->msgln('Downloading and installing updates.  The system will restart when appropriate.');
       $cmd = sprintf('%s --install -%s%s', $this->getSoftwareUpdate(), implode(' ', $switches), $noscan);
 
-      $SU = SoftwareUpdateDriver::fromShellCommandline($cmd);
+      $SU = SoftwareUpdateDriver::fromShellCommandline($cmd)->setTimeout($timeout)->setIdleTimeout($timeout);
       $SU->run();
 
       if (!$SU->isSuccessful())
@@ -135,7 +136,7 @@ class InstallCommand extends AbstractUpdateConsole
         $this->io()->info('Installing '.$macUpdate->getName(), 50);
         $flags = ['no-scan' => true, 'install' => $macUpdate->getId()];
 
-        $SU = SoftwareUpdateDriver::fromFlags($flags);
+        $SU = $this->getSoftwareUpdateDriver($flags);
         $SU->run();
 
         if (!$SU->isSuccessful())
