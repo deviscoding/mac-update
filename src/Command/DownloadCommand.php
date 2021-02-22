@@ -2,7 +2,6 @@
 
 namespace DevCoding\Mac\Update\Command;
 
-use DevCoding\Mac\Update\Drivers\SoftwareUpdateDriver;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -22,6 +21,13 @@ class DownloadCommand extends AbstractUpdateConsole
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
+    if (!$this->isNoScan() && !$this->isSusAvailable())
+    {
+      $this->io()->errorln('The Software Update Server is not available.');
+
+      return self::EXIT_ERROR;
+    }
+
     $this->io()->blankln()->msg('Checking For Updates', 50);
     $Updates = $this->getValidUpdates();
     $this->io()->successln('[SUCCESS]');

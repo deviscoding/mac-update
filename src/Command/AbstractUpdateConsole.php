@@ -226,6 +226,7 @@ class AbstractUpdateConsole extends AbstractMacConsole
    * @param string[] $flags
    *
    * @return SoftwareUpdateDriver
+   *
    * @throws \Exception
    */
   protected function getSoftwareUpdateDriver($flags)
@@ -467,6 +468,26 @@ class AbstractUpdateConsole extends AbstractMacConsole
     }
 
     return false;
+  }
+
+  /**
+   * @param string|null $sus
+   *
+   * @return bool
+   */
+  protected function isSusAvailable($sus = '_NONE_')
+  {
+    $tSus = '_NONE_' === $sus ? $this->getOs()->getSoftwareUpdateCatalogUrl() : $sus;
+    if (!empty($tSus))
+    {
+      $ua = sprintf('Darwin/%s', $this->getShellExec('uname -r'));
+      if ($rs = $this->getShellExec(sprintf('curl --user-agent %s %s -I -s | grep 200', $ua, $sus)))
+      {
+        return false !== strpos($rs, '200');
+      }
+    }
+
+    return true;
   }
 
   // endregion ///////////////////////////////////////////// End System Information Functions

@@ -28,6 +28,9 @@ class SummaryCommand extends AbstractUpdateConsole
     $this->io()->blankln();
     $this->io()->msg('Checking For Updates', 50);
     $Updates = $this->getUpdateList();
+    $this->io()->successln('[SUCCESS]');
+
+    $this->io()->msg('Getting Summary', 50);
     $summary = $this->getSummary($Updates);
     $this->io()->successln('[SUCCESS]');
 
@@ -44,6 +47,8 @@ class SummaryCommand extends AbstractUpdateConsole
       $this->io()->info('Updates Requiring Shutdown', 50)->msgln($summary['shutdown']);
       $this->io()->blankln();
       $this->io()->info('Console Username', 50)->msgln($summary['console_user']);
+      $this->io()->info('Content Cache', 50)->msgln(!empty($summary['content_cache']) ? implode(',', $summary['content_cache']) : 'None');
+      $this->io()->info('SUS Url', 50)->msgln($summary['sus_url'] ? $summary['sus_url'] : 'None');
       $this->io()->info('Free Disk Space', 50)->msgln($summary['disk_space'].'GiB');
       $this->io()->info('Has T2 Security Chip', 50)->msgln($summary['security_chip'] ? 'Yes' : 'No');
       $this->io()->blankln();
@@ -81,6 +86,17 @@ class SummaryCommand extends AbstractUpdateConsole
         $this->io()->successln('No');
       }
 
+      // SUS Available?
+      $this->io()->info('SUS Offline?', 50);
+      if ($summary['sus_offline'])
+      {
+        $this->io()->errorln('Yes');
+      }
+      else
+      {
+        $this->io()->successln('No');
+      }
+
       $this->io()->blankln();
     }
 
@@ -94,6 +110,7 @@ class SummaryCommand extends AbstractUpdateConsole
    */
   protected function getSummary($Updates)
   {
+    $susUrl = $this->getDevice()->getOs()->getSoftwareUpdateCatalogUrl();
     $output = [
         'count'          => count($Updates),
         'recommended'    => 0,
@@ -106,6 +123,9 @@ class SummaryCommand extends AbstractUpdateConsole
         'encrypting'     => $this->isEncryptingFileVault(),
         'prevent_sleep'  => $this->isDisplaySleepPrevented(),
         'security_chip'  => $this->isSecurityChip(),
+        'sus_offline'    => !$this->isSusAvailable($susUrl),
+        'sus_url'        => $this->getDevice()->getOs()->getSoftwareUpdateCatalogUrl(),
+        'content_cache'  => $this->getDevice()->getOs()->getSharedCaches(),
     ];
 
     foreach ($Updates as $Update)

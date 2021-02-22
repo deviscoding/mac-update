@@ -32,6 +32,13 @@ class InstallCommand extends AbstractUpdateConsole
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
+    if (!$this->isNoScan() && !$this->isSusAvailable())
+    {
+      $this->io()->errorln('The Software Update Server is not available.');
+
+      return self::EXIT_ERROR;
+    }
+
     $errors     = [];
     $cUser      = $this->getConsoleUser();
     $Updates    = $this->getValidUpdates();

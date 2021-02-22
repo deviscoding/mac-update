@@ -18,6 +18,13 @@ class CheckCommand extends AbstractUpdateConsole
   {
     $this->io()->blankln();
 
+    if (!$this->isNoScan() && !$this->isSusAvailable())
+    {
+      $this->io()->errorln('The Software Update Server is not available.');
+
+      return self::EXIT_ERROR;
+    }
+
     $this->io()->msg('Checking For Updates', 50);
     $Updates = $this->getValidUpdates();
     $this->io()->successln('[SUCCESS]');

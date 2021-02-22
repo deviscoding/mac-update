@@ -18,17 +18,20 @@ class WaitCommand extends AbstractUpdateConsole
     $this->addOption('power', null, InputOption::VALUE_NONE, 'Wait for AC Power');
     $this->addOption('filevault', null, InputOption::VALUE_NONE, 'Wait for FileVault Encryption');
     $this->addOption('screen', null, InputOption::VALUE_NONE, 'Wait for Screen Sleep Enabled');
+    $this->addOption('sus', null, InputOption::VALUE_NONE, 'Wait for SUS Availability');
     $this->addOption('all', null, InputOption::VALUE_NONE, 'Wait for All Items');
   }
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
+    $susUrl     = $this->getOs()->getSoftwareUpdateCatalogUrl();
     $isAll      = $this->io()->getOption('all');
     $isCpu      = $isAll || $this->io()->getOption('cpu');
     $isUser     = $isAll || $this->io()->getOption('user');
     $isPower    = $isAll || $this->io()->getOption('power');
     $isScreen   = $isAll || $this->io()->getOption('screen');
     $isVault    = $isAll || $this->io()->getOption('filevault');
+    $isSus      = $isAll || $this->io()->getOption('sus');
     $seconds    = $this->io()->getArgument('seconds');
     $isJson     = $this->io()->getOption('json');
     $waitUser   = false;
@@ -36,6 +39,7 @@ class WaitCommand extends AbstractUpdateConsole
     $waitScreen = false;
     $waitVault  = false;
     $waitCpu    = false;
+    $waitSus    = false;
 
     // Set Verbosity for JSON Output
     if ($isJson)
@@ -56,6 +60,7 @@ class WaitCommand extends AbstractUpdateConsole
       $waitPower  = $isPower  && $this->isBatteryPowered();
       $waitScreen = $isScreen && $this->isDisplaySleepPrevented();
       $waitUser   = $isUser   && !empty($this->getConsoleUser());
+      $waitSus    = $isSus    && !$this->isSusAvailable($susUrl);
 
       if ($waitCpu || $waitVault || $waitPower || $waitScreen || $waitUser)
       {
@@ -69,7 +74,15 @@ class WaitCommand extends AbstractUpdateConsole
 
     if ($this->io()->getOption('json'))
     {
-      $summary = ['cpu' => $waitCpu, 'filevault' => $waitVault, 'power' => $waitPower, 'screen' => $waitScreen, 'user' => $waitUser];
+      $summary = [
+          'cpu'       => $waitCpu,
+          'filevault' => $waitVault,
+          'power'     => $waitPower,
+          'screen'    => $waitScreen,
+          'user'      => $waitUser,
+          'sus'       => $waitSus,
+          ];
+
       $this->io()->writeln(json_encode($summary, JSON_UNESCAPED_SLASHES + JSON_PRETTY_PRINT), null, false, OutputInterface::VERBOSITY_QUIET);
     }
     else
@@ -88,6 +101,16 @@ class WaitCommand extends AbstractUpdateConsole
 
       $this->io()->info('Waiting on FileVault', 40);
       if ($waitVault)
+      {
+        $this->io()->errorln('[YES]');
+      }
+      else
+      {
+        $this->io()->successln('[NO]');
+      }
+
+      $this->io()->info('Waiting on SUS', 40);
+      if ($waitSus)
       {
         $this->io()->errorln('[YES]');
       }
@@ -129,6 +152,6 @@ class WaitCommand extends AbstractUpdateConsole
       $this->io()->blankln();
     }
 
-    return $waitCpu || $waitVault || $waitPower || $waitScreen || $waitUser ? self::EXIT_ERROR : self::EXIT_SUCCESS;
+    return $waitCpu || $waitVault || $waitPower || $waitScreen || $waitSus || $waitUser ? self::EXIT_ERROR : self::EXIT_SUCCESS;
   }
 }
