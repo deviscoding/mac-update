@@ -6,7 +6,7 @@ Updates that require either a restart or shutdown can be easily segregated, most
 This tool does not install, cache, or check for updates on its own; it uses the built-in `softwareupdate` command.    
 
 ## Compatibility    
- This utility should be compatible with native macOS systems running High Sierra, Mojave, or Catalina. It has not been tested with Big Sur. 
+ This utility should be compatible with native macOS systems running High Sierra, Mojave, Catalina, and Big Sur.  It will run on both Intel and Apple Silicon.
 
 This software does not have any non-native dependencies, however installation of [JQ](https://github.com/stedolan/jq) is highly recommended for parsing the JSON output in bash scripts.
     
