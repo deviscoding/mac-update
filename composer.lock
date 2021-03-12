@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5dc536c0449a2623ce43a7471b897530",
+    "content-hash": "279cfaf9d3e8cf39a5017b0398a0a2a5",
     "packages": [
         {
             "name": "deviscoding/mac-console",
-            "version": "1.4.3",
+            "version": "1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/deviscoding/mac-console.git",
-                "reference": "cccfa967ef6ffa3bd094748e6eee9242a468e232"
+                "reference": "e5b9b69980f25ead57eb3103447076c61fbcfd13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/deviscoding/mac-console/zipball/cccfa967ef6ffa3bd094748e6eee9242a468e232",
-                "reference": "cccfa967ef6ffa3bd094748e6eee9242a468e232",
+                "url": "https://api.github.com/repos/deviscoding/mac-console/zipball/e5b9b69980f25ead57eb3103447076c61fbcfd13",
+                "reference": "e5b9b69980f25ead57eb3103447076c61fbcfd13",
                 "shasum": ""
             },
             "require": {
@@ -47,9 +47,9 @@
             "description": "Parent class with convenience functions for creating macOS CLI commands using the Symfony console component.",
             "support": {
                 "issues": "https://github.com/deviscoding/mac-console/issues",
-                "source": "https://github.com/deviscoding/mac-console/tree/v1.4.3"
+                "source": "https://github.com/deviscoding/mac-console/tree/v1.6"
             },
-            "time": "2021-02-17T16:30:18+00:00"
+            "time": "2021-03-12T22:23:03+00:00"
         },
         {
             "name": "jonesiscoding/base-console",
@@ -212,16 +212,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.4.19",
+            "version": "v4.4.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "24026c44fc37099fa145707fecd43672831b837a"
+                "reference": "c98349bda966c70d6c08b4cd8658377c94166492"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/24026c44fc37099fa145707fecd43672831b837a",
-                "reference": "24026c44fc37099fa145707fecd43672831b837a",
+                "url": "https://api.github.com/repos/symfony/console/zipball/c98349bda966c70d6c08b4cd8658377c94166492",
+                "reference": "c98349bda966c70d6c08b4cd8658377c94166492",
                 "shasum": ""
             },
             "require": {
@@ -281,7 +281,7 @@
             "description": "Eases the creation of beautiful and testable command line interfaces",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/console/tree/v4.4.19"
+                "source": "https://github.com/symfony/console/tree/v4.4.20"
             },
             "funding": [
                 {
@@ -297,7 +297,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-27T09:09:26+00:00"
+            "time": "2021-02-22T18:44:15+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -543,7 +543,7 @@
         },
         {
             "name": "symfony/process",
-            "version": "v4.4.19",
+            "version": "v4.4.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
@@ -584,7 +584,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v4.4.19"
+                "source": "https://github.com/symfony/process/tree/v4.4.20"
             },
             "funding": [
                 {

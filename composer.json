@@ -14,12 +14,12 @@
             "DevCoding\\Mac\\Update\\": "src"
         }
     },
-    "version": "1.8",
+    "version": "1.9",
     "require": {
         "php": "^7.0",
         "ext-json": "*",
         "symfony/process": "^4.4",
-        "deviscoding/mac-console": "^1.4",
+        "deviscoding/mac-console": "^1.6",
         "ext-curl": "*"
     }
 }
