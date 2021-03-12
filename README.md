@@ -34,10 +34,11 @@ These flags can be combined if desired, in which case results will be limited to
 ### Summary Command    
 The most useful command is `summary`, which will output a count of total, recommended, restart required, and shutdown required updates, as well as the following additional information that is useful when determining if updates can and should be run.    
     
- - Console Username    
- - Is T2 Security Chip Present?    
+ - Console Username
  - Is Secure Boot Enabled?    
- - Is System on Battery Power?    
+ - Is System on Battery Power?
+ - Remaining Battery Percentage
+ - Remaining Battery Minutes
  - Is Screen Sleep Prevented?    
  - Is Encryption in Progress?
  - How much disk space is free?
