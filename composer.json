@@ -16,10 +16,15 @@
     },
     "version": "1.9.1",
     "require": {
-        "php": "^7.0",
+        "php": "^7.1",
         "ext-json": "*",
         "symfony/process": "^4.4",
         "deviscoding/mac-console": "^1.6",
         "ext-curl": "*"
+    },
+    "config": {
+        "platform": {
+            "php": "7.1.33"
+        }
     }
 }
