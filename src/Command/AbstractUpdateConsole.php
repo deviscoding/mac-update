@@ -189,12 +189,12 @@ class AbstractUpdateConsole extends AbstractMacConsole
       $search = str_replace('-'.(string) $this->getOs()->getVersion(), '', $Update->getId());
       $result = $this->getShellExec(sprintf('cat /var/log/install.log | grep "%s" | tail -1', $search));
 
-      if (preg_match('#^\s*([^|]*)\s*|#', $result, $matches))
+      if (preg_match('#^\s*([^|(]*)\(?[A-Z]?\)?\s*|#', $result, $matches))
       {
         $log   = '/var/log/install.log';
         $index = trim($matches[1]);
         $date  = substr(date('Y-m-d H:i'), -1);
-        $cmd   = sprintf('cat %s | grep "%s requires bridgeOS update" | grep "%s"', $log, $index, $date);
+        $cmd   = sprintf('cat %s | grep "%s" | grep "requires bridgeOS update" | grep "%s"', $log, $index, $date);
         $grep  = $this->getShellExec($cmd);
 
         if (!empty($grep))
